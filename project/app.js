@@ -64,29 +64,26 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   });
 
-  // Start button
-  startBtn.addEventListener("click", () => {
-    startBtn.style.display = "none";
-    videoElement.style.display = "block";
-    bgMusic.play().catch(() => {
-      console.log("Background music autoplay prevented");
-    });
-    updateScene();
-  });
-
+  // // Start button
+  // startBtn.addEventListener("click", () => {
+  //   startBtn.style.display = "none";
+  //   videoElement.style.display = "block";
+  //   bgMusic.play().catch(() => {
+  //     console.log("Background music autoplay prevented");
+  //   });
+  //   updateScene();
+  // });
 
   //broke this function....
   // Now handle choice buttons click
   choices.forEach((choice, index) => {
     choice.addEventListener("click", () => {
       // Show a random dialogue first
+      const currentScene = story[currentIndex];
       const randomDialogue =
         sampleDialogues[Math.floor(Math.random() * sampleDialogues.length)];
-      storyElement.textContent = randomDialogue;
-      setTimeout(() => {
-        currentIndex = index + 1; // Adjust index if needed to match your story array
-        updateScene();
-      }, 2000);
+        //storyElement.textContent = randomDialogue;
+        typeText(randomDialogue, storyElement, speed = 30)
     });
   });
 });
