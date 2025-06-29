@@ -7,6 +7,8 @@
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
+    <audio id="bg-music" src="court.mp3" loop></audio>
+
     <div id="container">
       <header id="header">
         <h1 id="title">Text Adventure</h1>
@@ -16,18 +18,12 @@
 
       <!-- The Main Layout -->
       <main id="main-content">
-        <video src="1.mp4" id="video-container"></video>
+        <video id="next-video" src="1.mp4"></video>
 
         <div id="dialogue-box">
           <div id="speaker-name">Phoenix Wright</div>
-          <div id="dialogue-text">
-            This is where we will put our dialogue in here! Pretty cool huh.
-            This is where we will put our dialogue in here! Pretty cool huh.
-            This is where we will put our dialogue in here! Pretty cool huh.
-            This is where we will put our dialogue in here! Pretty cool huh.
-            This is where we will put our dialogue in here! Pretty cool huh.
-            This is where we will put our dialogue in here! Pretty cool huh.
-          </div>
+          <div id="story-text"></div>
+          <div id="dialogue-text"></div>
         </div>
 
         <div id="choices-container">
