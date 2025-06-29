@@ -6,21 +6,38 @@
     <title>Text Adventure</title>
     <link rel="stylesheet" href="style.css" />
   </head>
-  <body>
-    <div id="container">
-      <header id="header">
-        <h1 id="title">Text Adventure</h1>
+  <body class="m-0 p-0 h-screen w-screen bg-indigo-600 text-white">
+    <!-- Main Content -->
+    <div class="flex flex-col mx-auto h-full border-x-8 border-x-rose-500">
+      <!-- Header -->
+      <header class="p-3.5 text-center border-b-4 border-b-rose-500">
+        <h1
+          class="m-0 text-4xl text-white text-shadow-[3px_3px_0] text-shadow-rose-500"
+        >
+          Text Adventure
+        </h1>
       </header>
 
       <!-- Overlay here? -->
 
       <!-- The Main Layout -->
-      <main id="main-content">
-        <video src="1.mp4" id="video-container"></video>
+      <main class="flex-1 flex flex-col p-5 overflow-hidden">
+        <video
+          src="1.mp4"
+          class="flex-1 min-h-0 m-4 bg-black rounded-[15px] flex justify-center items-center"
+        ></video>
 
-        <div id="dialogue-box">
-          <div id="speaker-name">Phoenix Wright</div>
-          <div id="dialogue-text">
+        <div
+          id="dialogue-box"
+          class="relative border-4 border-red-600 rounded-md p-5 mb-5 min-h-[150px]"
+        >
+          <div
+            id="speaker-name"
+            class="absolute -top-4 left-5 bg-red-600 text-white px-4 py-1 rounded-full font-bold"
+          >
+            Phoenix Wright
+          </div>
+          <div id="dialogue-text" class="text-lg leading-relaxed">
             This is where we will put our dialogue in here! Pretty cool huh.
             This is where we will put our dialogue in here! Pretty cool huh.
             This is where we will put our dialogue in here! Pretty cool huh.
@@ -30,7 +47,7 @@
           </div>
         </div>
 
-        <div id="choices-container">
+        <div id="choices-container" class="grid grid-cols-2 gap-4">
           <button class="choice-btn">Present Evidence</button>
           <button class="choice-btn">Cross-Examine</button>
           <button class="choice-btn">Investigate</button>
@@ -38,7 +55,9 @@
         </div>
       </main>
 
-      <footer id="footer">© 2025 Text Adventure</footer>
+      <footer class="p-[10px] text-center border-t-4 border-t-rose-500 text-sm">
+        © 2025 Text Adventure
+      </footer>
     </div>
     <script src="app.js"></script>
   </body>
