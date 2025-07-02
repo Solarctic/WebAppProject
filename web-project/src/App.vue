@@ -54,6 +54,7 @@
 
 import { onMounted } from 'vue'
 
+// Include the script
 onMounted(() => {
   const script = document.createElement('script')
   script.src = 'app.js'

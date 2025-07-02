@@ -11,7 +11,7 @@
   // Use 'forwardPorts' to make a list of ports inside the container available locally.
   // "forwardPorts": [],
 
-  // "postCreateCommand": "npm install vue@latest tailwindcss @tailwindcss/vite",
+  "postCreateCommand": "cd web-project && npm install",
 
   // Configure tool-specific properties.
   "customizations": {
