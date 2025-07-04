@@ -1,94 +1,66 @@
 <script setup>
-// Components
 import VideoPlayer from '@/components/VideoPlayer.vue'
 import DialogueBox from '@/components/DialogueBox.vue'
 import ChoicesBox from '@/components/ChoicesBox.vue'
 import { story } from '@/stores/story-data'
 import { onMounted, ref, reactive } from 'vue'
 
-// Dialogue Box
+const currentSceneIndex = ref(0);
 const dialogueBoxProps = reactive({
-  speakerName: "Player",
-  text: "Test",
+  speakerName: 'Player',
+  text: 'Test',
+});
+const choicesButtonsProps = reactive({
+  choices: [],
 });
 
-// Include the script
-onMounted(() => {
-// Get DOM elements
-const videoElement = document.getElementById("video-container");
-const bgMusic = document.getElementById("bg-music");
-const choices = document.querySelectorAll(".choice-btn");
+// Get DOM elements references
+let videoElement = null;
+let bgMusic = null;
 
-// Refs
-let currentSceneIndex = ref(0);
-
-// Update the scene with current story data
+// Update scene function accessible everywhere
 function updateScene() {
-  // Get a index of the story
   const currentScene = story[currentSceneIndex.value];
+  if (videoElement) {
+    videoElement.src = currentScene.video;
+    videoElement.currentTime = 0;
+    videoElement.play();
+  }
 
-  // Update video
-  videoElement.src = currentScene.video;
-  // Reset to zero
-  videoElement.currentTime = 0;
-  videoElement.play();
-
-  // Update speaker and text
   dialogueBoxProps.speakerName = currentScene.speaker;
   dialogueBoxProps.text = currentScene.text;
 
-  // Update choices
-  choices.forEach((choice, index) => {
-    if (index < currentScene.choices.length) {
-      choice.textContent = currentScene.choices[index];
-      choice.style.display = "block";
-      choice.disabled = false;
-    } else {
-      // Hide it
-      choice.style.display = "none";
-    }
-  });
-}
-
-// Start Function
-function startGame() {
-  bgMusic.play();
-
-  // Hide all choices
-  choices.forEach((choice) => {
-    choice.style.display = "none";
-  });
-
-  updateScene();
+  choicesButtonsProps.choices = currentScene.choices;
 }
 
 // Handle choice selection
-choices.forEach((choice, index) => {
-  choice.addEventListener("click", () => {
-    const currentScene = story[currentSceneIndex.value];
-    if (index >= currentScene.responses.length) return;
+function handleChoice(index) {
+  const currentScene = story[currentSceneIndex.value];
+  if (index >= currentScene.responses.length) {
+    return
+  }
 
-    // Disable all choices during response
-    choices.forEach((btn) => {
-      btn.disabled = true;
-    });
+  choicesButtonsProps.choices = [];
+  dialogueBoxProps.speakerName = 'Player';
+  dialogueBoxProps.text = currentScene.responses[index];
 
-    // Dialogue
-    dialogueBoxProps.speakerName = "Player";
-    dialogueBoxProps.text = currentScene.responses[index];
+  setTimeout(() => {
+    if (currentSceneIndex.value < story.length - 1) {
+      currentSceneIndex.value++;
+      updateScene();
+    }
+  }, 3500);
+}
 
-    // ToDo: Use Dialogue's even callback to advance the story
-    // Set a timer before move to next scene
-    setTimeout(() => {
-      if (currentSceneIndex.value < story.length - 1) {
-        currentSceneIndex.value++;
-        updateScene();
-      }
-    }, 3500);
-  });
-});
+onMounted(() => {
+  videoElement = document.getElementById('video-container');
+  bgMusic = document.getElementById('bg-music');
 
-  startGame();
+  if (bgMusic) {
+    bgMusic.play();
+  }
+
+  updateScene();
 })
 </script>
 
@@ -107,10 +79,9 @@ choices.forEach((choice, index) => {
 
       <!-- The Main Layout -->
       <main class="flex-1 flex flex-col p-5 overflow-hidden">
-        <VideoPlayer></VideoPlayer>
+        <VideoPlayer />
         <DialogueBox v-bind="dialogueBoxProps"></DialogueBox>
-
-        <ChoicesBox></ChoicesBox>
+        <ChoicesBox v-bind="choicesButtonsProps" @choiceSelected="handleChoice" />
       </main>
     </div>
   </div>

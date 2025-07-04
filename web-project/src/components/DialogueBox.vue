@@ -4,23 +4,23 @@ import { watch, ref } from 'vue'
 const props = defineProps({
   speakerName: String,
   text: String,
-})
+});
 
 const displayText = ref('');
 let interval = null;
 const speed = 30;
 
 watch(() => props.text, (newText) => {
-  clearInterval(interval)
-  displayText.value = ''
-  let i = 0
+  clearInterval(interval);
+  displayText.value = '';
+  let i = 0;
 
   interval = setInterval(() => {
     if (i < newText.length) {
-      displayText.value += newText.charAt(i)
-      i++
+      displayText.value += newText.charAt(i);
+      i++;
     } else {
-      clearInterval(interval)
+      clearInterval(interval);
     }
   }, speed)
 }, { immediate: true })
