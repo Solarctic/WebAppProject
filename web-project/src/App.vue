@@ -2,11 +2,13 @@
 import { ref, provide } from 'vue'
 import MainMenu from './views/MainMenu.vue'
 import GameScene from './views/GameScene.vue'
+import LoginForm from './views/Login.vue'
 
 // List of Scene
 const views = {
   MainMenu,
   GameScene,
+  LoginForm
 }
 
 // Hold the scene variable
