@@ -2,6 +2,36 @@
   <body class="m-0 p-0 h-screen w-screen bg-indigo-600 text-white">
     <audio id="bg-music" src="court.mp3" loop></audio>
 
+
+    <!-- check login -->
+
+    <!-- <div
+      v-if="!isLoggedIn"
+      class="absolute inset-0 z-50 bg-black bg-opacity-80 flex flex-col items-center justify-center"
+    >
+      <h2 class="text-2xl mb-4">Login</h2>
+      <form @submit.prevent="handleLogin" class="flex flex-col gap-4 w-64">
+        <input
+          v-model="username"
+          placeholder="Username"
+          class="px-4 py-2 rounded text-black"
+        />
+        <input
+          v-model="password"
+          type="password"
+          placeholder="Password"
+          class="px-4 py-2 rounded text-black"
+        />
+        <button
+          type="submit"
+          class="bg-rose-600 hover:bg-rose-700 px-4 py-2 rounded text-white"
+        >
+          Login
+        </button>
+        <p v-if="errorMessage" class="text-red-400 text-sm">{{ errorMessage }}</p>
+      </form>
+    </div> -->
+
     <!-- Main Content -->
     <div class="flex flex-col mx-auto h-full border-x-8 border-x-rose-500">
       <!-- Header -->
@@ -61,3 +91,4 @@ onMounted(() => {
   document.body.appendChild(script)
 })
 </script>
+
