@@ -9,3 +9,8 @@ In the web-project folder:
 npm install
 npm run dev
 ```
+
+##  For Database file (main menu branch) (db.json)
+
+Please run:
+```npx json-server --watch db.json --port 3000```
