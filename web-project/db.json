@@ -1,13 +1,6 @@
 {
   "users": [
     { "id": 1, "name": "admin", "password": "admin123" },
-    { "id": 2, "name": "user", "password": "user123" }
+    { "id": 2, "name": "user", "password": "userpass" }
   ]
 }
-
-// this a fake db for backend used for testing purposes
-
-// json-server --watch db.json --port 3000
-// npm run json-server
-
-

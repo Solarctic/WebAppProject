@@ -1,0 +1,42 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Launch Web",
+            "type": "node",
+            "request": "launch",
+            "runtimeExecutable": "npm",
+            "runtimeArgs": [
+                "run-script",
+                "dev"
+            ],
+            "cwd": "${workspaceFolder}/web-project",
+            "skipFiles": [
+                "<node_internals>/**"
+            ]
+        },
+        {
+            "name": "Launch DB",
+            "type": "node",
+            "request": "launch",
+            "runtimeExecutable": "npx",
+            "runtimeArgs": [
+                "json-server",
+                "--watch",
+                "db.json",
+                "--port",
+                "3000"
+            ],
+            "cwd": "${workspaceFolder}/web-project",
+            "skipFiles": [
+                "<node_internals>/**"
+            ]
+        }
+    ],
+    "compounds": [
+        {
+            "name": "Start Web + DB",
+            "configurations": ["Launch Web", "Launch DB"]
+        }
+    ]
+}
