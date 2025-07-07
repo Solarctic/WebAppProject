@@ -2,51 +2,28 @@
   <body class="m-0 p-0 h-screen w-screen bg-indigo-600 text-white">
     <audio id="bg-music" src="court.mp3" loop></audio>
 
-
-    <!-- check login -->
-
-    <!-- <div
-      v-if="!isLoggedIn"
-      class="absolute inset-0 z-50 bg-black bg-opacity-80 flex flex-col items-center justify-center"
-    >
-      <h2 class="text-2xl mb-4">Login</h2>
-      <form @submit.prevent="handleLogin" class="flex flex-col gap-4 w-64">
-        <input
-          v-model="username"
-          placeholder="Username"
-          class="px-4 py-2 rounded text-black"
-        />
-        <input
-          v-model="password"
-          type="password"
-          placeholder="Password"
-          class="px-4 py-2 rounded text-black"
-        />
-        <button
-          type="submit"
-          class="bg-rose-600 hover:bg-rose-700 px-4 py-2 rounded text-white"
-        >
-          Login
-        </button>
-        <p v-if="errorMessage" class="text-red-400 text-sm">{{ errorMessage }}</p>
-      </form>
-    </div> -->
-
-    <!-- Main Content -->
-    <div class="flex flex-col mx-auto h-full border-x-8 border-x-rose-500">
-      <!-- Header -->
+    <div class="flex flex-col mx-auto h-full border-x-8 border-x-rose-500 relative">
       <header class="p-3.5 text-center border-b-4 border-b-rose-500">
-        <h1
-          class="m-0 text-4xl text-white text-shadow-[3px_3px_0] text-shadow-rose-500"
-        >
+        <h1 class="m-0 text-4xl text-white text-shadow-[3px_3px_0] text-shadow-rose-500">
           Text Adventure
         </h1>
       </header>
 
-      <!-- Overlay here? -->
+      <!-- Start screen overlay -->
+      <div
+        v-if="!gameStarted"
+        class="absolute inset-0 z-50 bg-indigo-800 flex items-center justify-center"
+      >
+        <button
+          @click="handleStartGame"
+          class="bg-rose-600 hover:bg-rose-700 px-6 py-3 rounded text-white text-2xl"
+        >
+          Start Game
+        </button>
+      </div>
 
-      <!-- The Main Layout -->
-      <main class="flex-1 flex flex-col p-5 overflow-hidden">
+      <!-- Main game content -->
+      <main v-show="gameStarted" class="flex-1 flex flex-col p-5 overflow-hidden">
         <video
           id="video-container"
           class="flex-1 min-h-0 m-4 bg-black rounded-[15px] flex justify-center items-center"
@@ -81,14 +58,24 @@
 </template>
 
 <script setup>
+import { ref, nextTick, onMounted } from 'vue'
 
-import { onMounted } from 'vue'
+const gameStarted = ref(false)
 
-// Include the script
+// 点击按钮后调用，显示游戏界面并调用 app.js 的 startGame
+function handleStartGame() {
+  gameStarted.value = true
+  nextTick(() => {
+    if (window.startGame) {
+      window.startGame()
+    }
+  })
+}
+
+// 加载外部脚本
 onMounted(() => {
   const script = document.createElement('script')
   script.src = 'app.js'
   document.body.appendChild(script)
 })
 </script>
-
