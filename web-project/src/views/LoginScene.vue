@@ -47,6 +47,9 @@ const handleLogin = async () => {
   }
 }
 
+
+// ToDo: Include the data to the session (ideally use token rather than entire info)
+    // sessionStorage.setItem("authToken", JSON.stringify(data));
 const handleSignup = async () => {
   if (!username.value || !password.value) {
     showNotification('Please enter both username and password')
@@ -54,14 +57,46 @@ const handleSignup = async () => {
   }
 
   try {
-    // ToDo: Sign Up CODE
-    // ToDo: Include the data to the session (ideally use token rather than entire info)
-    // sessionStorage.setItem("authToken", JSON.stringify(data));
+    //Check if username already exists
+    const checkRes = await fetch(
+      `http://localhost:3000/users?name=${username.value}`
+    )
+    const existingUsers = await checkRes.json()
+
+    if (existingUsers.length > 0) {
+      showNotification('Username already taken')
+      return
+    }
+
+    //Create new user
+    const createRes = await fetch('http://localhost:3000/users', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        name: username.value,
+        password: password.value,
+        save: "", //check
+      }),
+    })
+
+    const newUser = await createRes.json()
+    console.log("Created user:", newUser)
+
+    //Store user in session (note: use a real token system in production)
+    sessionStorage.setItem('authToken', JSON.stringify([newUser]))
+
+    showNotification(`Welcome, ${newUser.name}!`)
+    setTimeout(() => {
+      router.push('/game')
+    }, 1500)
   } catch (err) {
     showNotification('Server error')
     console.error(err)
   }
 }
+
 
 if (sessionStorage.getItem('authToken')) {
   router.push('/menu')

@@ -1,5 +1,11 @@
 <script setup>
 import router from '@/router'
+
+const logout = () => {
+  sessionStorage.removeItem('authToken') // or use clear() if needed
+  router.push('/')
+}
+
 </script>
 
 <template>
@@ -20,6 +26,14 @@ import router from '@/router'
       >
         Load Save File
       </button>
+
+      <button
+        @click="logout"
+        class="bg-gray-600 hover:bg-gray-700 transition-colors duration-300 rounded-lg py-4 text-xl font-semibold shadow-md"
+      >
+      Log Out
+    </button>
+
     </div>
   </div>
 </template>

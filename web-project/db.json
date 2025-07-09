@@ -1,6 +1,34 @@
 {
   "users": [
-    { "id": 1, "name": "admin", "password": "admin123" },
-    { "id": 2, "name": "user", "password": "userpass" }
+    {
+      "id": "1",
+      "name": "admin",
+      "password": "admin123",
+      "save": ""
+    },
+    {
+      "id": "2",
+      "name": "user",
+      "password": "userpass",
+      "save": ""
+    },
+    {
+      "id": "1f40",
+      "name": "test",
+      "password": "12345",
+      "save": ""
+    },
+    {
+      "id": "03c2",
+      "name": "admin2",
+      "password": "1567",
+      "save": ""
+    },
+    {
+      "id": "a5c5",
+      "name": "aure",
+      "password": "aureb",
+      "save": ""
+    }
   ]
 }
