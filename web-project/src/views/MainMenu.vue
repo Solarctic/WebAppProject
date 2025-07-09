@@ -5,14 +5,7 @@ const switchTo = inject('switchTo')
 function startOrContinue() {
   switchTo('GameScene')
 }
-
-function showLogin()  {
-  switchTo('LoginForm')
-}
-
 </script>
-
-
 
 <template>
   <div class="flex flex-col items-center justify-center gap-10 p-6">
@@ -31,12 +24,6 @@ function showLogin()  {
         class="bg-rose-500 hover:bg-rose-600 transition-colors duration-300 rounded-lg py-4 text-xl font-semibold shadow-md"
       >
         Load Save File
-      </button>
-      <button
-        @click="showLogin"
-        class="bg-rose-500 hover:bg-rose-600 transition-colors duration-300 rounded-lg py-4 text-xl font-semibold shadow-md"
-      >
-        Login/Signup
       </button>
     </div>
   </div>

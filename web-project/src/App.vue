@@ -2,7 +2,7 @@
 import { ref, provide } from 'vue'
 import MainMenu from './views/MainMenu.vue'
 import GameScene from './views/GameScene.vue'
-import LoginForm from './views/Login.vue'
+import LoginForm from './views/LoginScene.vue'
 
 // List of Scene
 const views = {
@@ -12,7 +12,7 @@ const views = {
 }
 
 // Hold the scene variable
-const currentView = ref(views.MainMenu)
+const currentView = ref(views.LoginForm)
 
 // Switch the Scene
 function switchTo(viewName) {

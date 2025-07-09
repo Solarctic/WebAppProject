@@ -5,68 +5,71 @@ import ChoicesBox from '@/components/ChoicesBox.vue'
 import { story } from '@/stores/story-data'
 import { onMounted, ref, reactive } from 'vue'
 
-const currentSceneIndex = ref(0);
+const currentSceneIndex = ref(0)
 const dialogueBoxProps = reactive({
   speakerName: 'Player',
   text: 'Test',
-});
+})
 const choicesButtonsProps = reactive({
   choices: [],
-});
+})
 
 // Get DOM elements references
-let videoElement = null;
-let bgMusic = null;
+let videoElement = null
+let bgMusic = null
 
 // Update scene function accessible everywhere
 function updateScene() {
-  const currentScene = story[currentSceneIndex.value];
+  const currentScene = story[currentSceneIndex.value]
   if (videoElement) {
-    videoElement.src = currentScene.video;
-    videoElement.currentTime = 0;
-    videoElement.play();
+    videoElement.src = currentScene.video
+    videoElement.currentTime = 0
+    videoElement.play()
   }
 
-  dialogueBoxProps.speakerName = currentScene.speaker;
-  dialogueBoxProps.text = currentScene.text;
+  dialogueBoxProps.speakerName = currentScene.speaker
+  dialogueBoxProps.text = currentScene.text
 
-  choicesButtonsProps.choices = currentScene.choices;
+  choicesButtonsProps.choices = currentScene.choices
 }
 
 // Handle choice selection
 function handleChoice(index) {
-  const currentScene = story[currentSceneIndex.value];
+  const currentScene = story[currentSceneIndex.value]
   if (index >= currentScene.responses.length) {
     return
   }
 
-  choicesButtonsProps.choices = [];
-  dialogueBoxProps.speakerName = 'Player';
-  dialogueBoxProps.text = currentScene.responses[index];
+  choicesButtonsProps.choices = []
+  dialogueBoxProps.speakerName = 'Player'
+  dialogueBoxProps.text = currentScene.responses[index]
 
   setTimeout(() => {
     if (currentSceneIndex.value < story.length - 1) {
-      currentSceneIndex.value++;
-      updateScene();
+      currentSceneIndex.value++
+      updateScene()
     }
-  }, 3500);
+  }, 3500)
 }
 
 onMounted(() => {
-  videoElement = document.getElementById('video-container');
-  bgMusic = document.getElementById('bg-music');
+  videoElement = document.getElementById('video-container')
+  bgMusic = document.getElementById('bg-music')
 
   if (bgMusic) {
-    bgMusic.play();
+    bgMusic.play()
   }
 
-  updateScene();
+  updateScene()
 })
 </script>
 
 <template>
   <div class="">
     <audio id="bg-music" src="court.mp3" loop></audio>
+
+    <!-- Overlay Here? -->
+    <!-- ToDo: Save/Load Function, Go to Main Menu, Or Sign out -->
 
     <!-- Main Content -->
     <div class="flex flex-col mx-auto h-full">
