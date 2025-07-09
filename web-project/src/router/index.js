@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import LoginForm from '../views/LoginScene.vue'
 import MainMenu from '@/views/MainMenu.vue'
 import GameScene from '@/views/GameScene.vue'
+import GameSave from '@/components/GameSave.vue'
 
 // Simple Auth System
 function authGuard() {
@@ -24,7 +25,8 @@ export default createRouter({
       path: '/game',
       component: GameScene,
       beforeEnter: [authGuard, (to, from) => {
-          if (from.path === '/menu') {
+          if (from.path === '/menu' || from.path === '/save'
+          ) {
             return true
           }
           
@@ -34,6 +36,10 @@ export default createRouter({
     {
       path: '/',
       component: LoginForm,
+    },
+    {
+      path: '/save',
+      component: GameSave,
     },
   ],
 })
