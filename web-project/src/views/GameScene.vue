@@ -44,6 +44,7 @@ function handleChoice(index) {
   dialogueBoxProps.speakerName = 'Player'
   dialogueBoxProps.text = currentScene.responses[index]
 
+
   setTimeout(() => {
     if (currentSceneIndex.value < story.length - 1) {
       currentSceneIndex.value++
