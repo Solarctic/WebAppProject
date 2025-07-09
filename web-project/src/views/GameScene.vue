@@ -52,6 +52,17 @@ function handleChoice(index) {
   }, 3500)
 }
 
+function handleVideoAdvanceClick() {
+  const currentScene = story[currentSceneIndex.value]
+
+  if (currentScene.choices.length == 0) {
+    if (currentSceneIndex.value < story.length - 1) {
+      currentSceneIndex.value++
+      updateScene()
+    }
+  }
+}
+
 onMounted(() => {
   videoElement = document.getElementById('video-container')
   bgMusic = document.getElementById('bg-music')
@@ -82,8 +93,8 @@ onMounted(() => {
 
       <!-- The Main Layout -->
       <main class="flex-1 flex flex-col p-5 overflow-hidden">
-        <VideoPlayer />
-        <DialogueBox v-bind="dialogueBoxProps"></DialogueBox>
+        <VideoPlayer @advance="handleVideoAdvanceClick" />
+        <DialogueBox v-bind="dialogueBoxProps" />
         <ChoicesBox v-bind="choicesButtonsProps" @choiceSelected="handleChoice" />
       </main>
     </div>

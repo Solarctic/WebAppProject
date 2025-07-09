@@ -4,14 +4,14 @@ export const story = [
     video: '/beginning.mp4', // 新增开头视频
     speaker: 'Narrator',
     text: 'Welcome to the court. Prepare for the adventure.',
-    choices: ['Start'], // ToDo: 无按钮，点击视频推进
+    choices: [], // 无按钮，点击视频推进
     responses: [''],
   },
   {
     video: '/1.mp4',
     speaker: 'Phoenix Wright',
     text: "The court finds the defendant... Wait, this can't be right!",
-    choices: ['Next'], // ToDo: 还是无按钮，点击视频推进
+    choices: [], // 还是无按钮，点击视频推进
     responses: [''],
   },
   {
