@@ -1,10 +1,5 @@
 <script setup>
-import { inject } from 'vue'
-const switchTo = inject('switchTo')
-
-function startOrContinue() {
-  switchTo('GameScene')
-}
+import router from '@/router'
 </script>
 
 <template>
@@ -15,7 +10,7 @@ function startOrContinue() {
 
     <div class="flex flex-col gap-12 w-72">
       <button
-        @click="startOrContinue"
+        @click="router.push('/game')"
         class="bg-rose-600 hover:bg-rose-700 transition-colors duration-300 rounded-lg py-4 text-xl font-semibold shadow-md"
       >
         Start & Continue

@@ -1,18 +1,39 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import LoginForm from '../views/LoginScene.vue'
-import MainMenu from '../views/MainMenu.vue'
-import GameScene from '../views/GameScene.vue'
+import MainMenu from '@/views/MainMenu.vue'
+import GameScene from '@/views/GameScene.vue'
 
-const routes = [
-  { path: '/', component: LoginForm },
-  { path: '/menu', component: MainMenu },
-  { path: '/game', component: GameScene }
-]
+// Simple Auth System
+function authGuard() {
+  if (sessionStorage.getItem('authToken')) {
+    return true
+  }
 
-const router = createRouter({
+  return { path: '/' }
+}
+
+export default createRouter({
   history: createWebHistory(),
-  routes
+  routes: [
+    {
+      path: '/menu',
+      component: MainMenu,
+      beforeEnter: authGuard,
+    },
+    {
+      path: '/game',
+      component: GameScene,
+      beforeEnter: [authGuard, (to, from) => {
+          if (from.path === '/menu') {
+            return true
+          }
+          
+          return { path: '/menu' }
+        },],
+    },
+    {
+      path: '/',
+      component: LoginForm,
+    },
+  ],
 })
-
-export default router
-

@@ -1,8 +1,6 @@
 <script setup>
-import { ref, inject } from 'vue'
-
-// Ability to change the scene
-const switchTo = inject('switchTo')
+import router from '@/router'
+import { ref } from 'vue'
 
 // For signup/login form
 const username = ref('')
@@ -35,9 +33,10 @@ const handleLogin = async () => {
     const data = await res.json()
 
     if (data.length > 0) {
+      sessionStorage.setItem('authToken', JSON.stringify(data))
       showNotification(`Welcome, ${data[0].name}!`)
       setTimeout(() => {
-        switchTo('MainMenu')
+        router.push('/game')
       }, 1500)
     } else {
       showNotification('Invalid username or password')
@@ -56,10 +55,16 @@ const handleSignup = async () => {
 
   try {
     // ToDo: Sign Up CODE
+    // ToDo: Include the data to the session (ideally use token rather than entire info)
+    // sessionStorage.setItem("authToken", JSON.stringify(data));
   } catch (err) {
     showNotification('Server error')
     console.error(err)
   }
+}
+
+if (sessionStorage.getItem('authToken')) {
+  router.push('/menu')
 }
 </script>
 
