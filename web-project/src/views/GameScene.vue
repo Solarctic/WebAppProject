@@ -3,9 +3,13 @@ import VideoPlayer from '@/components/VideoPlayer.vue'
 import DialogueBox from '@/components/DialogueBox.vue'
 import ChoicesBox from '@/components/ChoicesBox.vue'
 import { story } from '@/stores/story-data'
-import { onMounted, ref, reactive } from 'vue'
+import { onMounted, reactive } from 'vue'
+import { StoryManager } from '@/composables/story-manager'
 
-const currentSceneIndex = ref(0)
+const storyManager = new StoryManager(story)
+
+// ToDo: Jump to?
+
 const dialogueBoxProps = reactive({
   speakerName: 'Player',
   text: 'Test',
@@ -20,7 +24,7 @@ let bgMusic = null
 
 // Update scene function accessible everywhere
 function updateScene() {
-  const currentScene = story[currentSceneIndex.value]
+  const currentScene = storyManager.getCurrentEvent
   if (videoElement) {
     videoElement.src = currentScene.video
     videoElement.currentTime = 0
@@ -35,7 +39,7 @@ function updateScene() {
 
 // Handle choice selection
 function handleChoice(index) {
-  const currentScene = story[currentSceneIndex.value]
+  const currentScene = storyManager.getCurrentEvent
   if (index >= currentScene.responses.length) {
     return
   }
@@ -45,19 +49,19 @@ function handleChoice(index) {
   dialogueBoxProps.text = currentScene.responses[index]
 
   setTimeout(() => {
-    if (currentSceneIndex.value < story.length - 1) {
-      currentSceneIndex.value++
+    const event = storyManager.makeChoice(index)
+    if (event) {
       updateScene()
     }
   }, 3500)
 }
 
 function handleVideoAdvanceClick() {
-  const currentScene = story[currentSceneIndex.value]
+  const currentScene = storyManager.getCurrentEvent
 
   if (currentScene.choices.length == 0) {
-    if (currentSceneIndex.value < story.length - 1) {
-      currentSceneIndex.value++
+    const event = storyManager.makeChoice(0)
+    if (event) {
       updateScene()
     }
   }
