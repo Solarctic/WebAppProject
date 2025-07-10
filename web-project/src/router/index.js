@@ -1,57 +1,23 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import LoginForm from '../views/LoginScene.vue'
-import MainMenu from '@/views/MainMenu.vue'
-import GameScene from '@/views/GameScene.vue'
-import GameSave from '@/views/GameSave.vue'
+import HomeView from '../views/HomeView.vue'
 
-// Simple Auth System
-function authGuard() {
-  if (sessionStorage.getItem('authToken')) {
-    return true
-  }
-
-  return { path: '/' }
-}
-
-export default createRouter({
-  history: createWebHistory(),
+const router = createRouter({
+  history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
-      path: '/menu',
-      component: MainMenu,
-      beforeEnter: authGuard,
-    },
-    {
-      path: '/game',
-      component: GameScene,
-      beforeEnter: [
-        authGuard,
-        (to, from) => {
-          if (from.path === '/menu' || from.path === '/save') {
-            return true
-          }
-
-          return { path: '/menu' }
-        },
-      ],
-    },
-    {
       path: '/',
-      component: LoginForm,
+      name: 'home',
+      component: HomeView,
     },
     {
-      path: '/save',
-      component: GameSave,
-      beforeEnter: [
-        authGuard,
-        (to, from) => {
-          if (from.path === '/menu') {
-            return true
-          }
-
-          return { path: '/menu' }
-        },
-      ],
+      path: '/about',
+      name: 'about',
+      // route level code-splitting
+      // this generates a separate chunk (About.[hash].js) for this route
+      // which is lazy-loaded when the route is visited.
+      component: () => import('../views/AboutView.vue'),
     },
   ],
 })
+
+export default router

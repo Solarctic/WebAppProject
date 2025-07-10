@@ -1,24 +1,21 @@
 import { fileURLToPath, URL } from 'node:url'
-
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import tailwindcss from '@tailwindcss/vite'
 import vueDevTools from 'vite-plugin-vue-devtools'
+import { viteSingleFile } from 'vite-plugin-singlefile'
 
-// https://vite.dev/config/
 export default defineConfig({
-  // Bind to the network interface
-  server: {
-    host: '0.0.0.0'
+  base: './',
+  plugins: [vue(), tailwindcss(), vueDevTools(), viteSingleFile()],
+  build: {
+    assetsInlineLimit: 100000000, // 把图片、字体等资源内联进 HTML
+    cssCodeSplit: false, // 把所有 CSS 合并成一个内联块
+    // ✅ 不要加 manualChunks
   },
-  plugins: [
-    vue(),
-    tailwindcss(),
-    vueDevTools(),
-  ],
   resolve: {
     alias: {
-      '@': fileURLToPath(new URL('./src', import.meta.url))
+      '@': fileURLToPath(new URL('./src', import.meta.url)),
     },
   },
 })
