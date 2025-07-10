@@ -5,7 +5,6 @@ const logout = () => {
   sessionStorage.removeItem('authToken') // or use clear() if needed
   router.push('/')
 }
-
 </script>
 
 <template>
@@ -21,19 +20,13 @@ const logout = () => {
       >
         Start & Continue
       </button>
-      <button
-        class="bg-rose-500 hover:bg-rose-600 transition-colors duration-300 rounded-lg py-4 text-xl font-semibold shadow-md"
-      >
-        Load Save File
-      </button>
 
       <button
         @click="logout"
         class="bg-gray-600 hover:bg-gray-700 transition-colors duration-300 rounded-lg py-4 text-xl font-semibold shadow-md"
       >
-      Log Out
-    </button>
-
+        Log Out
+      </button>
     </div>
   </div>
 </template>
