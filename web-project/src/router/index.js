@@ -42,6 +42,16 @@ export default createRouter({
     {
       path: '/save',
       component: GameSave,
+      beforeEnter: [
+        authGuard,
+        (to, from) => {
+          if (from.path === '/menu') {
+            return true
+          }
+
+          return { path: '/menu' }
+        },
+      ],
     },
   ],
 })
