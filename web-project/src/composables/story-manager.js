@@ -156,14 +156,13 @@ export class StoryManager extends LinkedList {
   }
 
   makeChoice(index) {
-    const oldEvent = this.findNodeById(this.currentId);
+    const oldEvent = this.findNodeById(this.currentId)
     const nextId = oldEvent.data.getNextEventId(index)
 
     if (nextId && this.findEventById(nextId)) {
       this.currentId = nextId
       return this.getCurrentEvent
-    }
-    else {
+    } else {
       // If the event has next event then go there otherwise return null
       if (oldEvent.next) {
         this.currentId = oldEvent.next.data.id
@@ -175,11 +174,11 @@ export class StoryManager extends LinkedList {
   }
 
   skipThisEvent() {
-    const oldEvent = this.findNodeById(this.currentId);
+    const oldEvent = this.findNodeById(this.currentId)
     if (oldEvent.next) {
-        this.currentId = oldEvent.next.data.id
-        return oldEvent.next.data
-      }
+      this.currentId = oldEvent.next.data.id
+      return oldEvent.next.data
+    }
   }
 
   // For Load fn
