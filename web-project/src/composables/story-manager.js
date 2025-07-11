@@ -174,6 +174,14 @@ export class StoryManager extends LinkedList {
     return null
   }
 
+  skipThisEvent() {
+    const oldEvent = this.findNodeById(this.currentId);
+    if (oldEvent.next) {
+        this.currentId = oldEvent.next.data.id
+        return oldEvent.next.data
+      }
+  }
+
   // For Load fn
   jumpTo(index) {
     if (this.findEventById(index)) {

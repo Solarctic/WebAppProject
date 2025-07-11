@@ -15,10 +15,10 @@ let hasKey = false
 
 // Background music change points
 const musicMap = {
-  "scene-0": '/Prologue.mp3',
-  "scene-8": '/court.mp3',
-  "scene-17": '/Suspense.mp3',
-  "scene-35": '/Lobby.mp3',
+  'scene-0': '/Prologue.mp3',
+  'scene-8': '/court.mp3',
+  'scene-17': '/Suspense.mp3',
+  'scene-35': '/Lobby.mp3',
 }
 
 // ToDo: Jump to?
@@ -147,14 +147,13 @@ onMounted(() => {
     updateCheatButton()
 
     setTimeout(() => {
-      // ToDo: fix this
-      // if (currentIndex === 6) {
-      //   currentIndex = 8
-      // } else if (currentIndex < story.length - 1) {
-      //   currentIndex++
-      // }
-      // updateScene()
-      // jumpedToEnd = false
+      const currentScene = storyManager.getCurrentEvent
+      if (currentScene.id === 'scene-6') {
+        storyManager.jumpTo('scene-8')
+      } else {
+        storyManager.skipThisEvent()
+      }
+      updateScene()
     }, 1000)
   })
 
@@ -209,8 +208,7 @@ onMounted(() => {
           </button>
         </div>
 
-                <DialogueBox v-bind="dialogueBoxProps" />
-
+        <DialogueBox v-bind="dialogueBoxProps" />
 
         <ChoicesBox class="mt-4" v-bind="choicesButtonsProps" @choiceSelected="handleChoice" />
       </main>
