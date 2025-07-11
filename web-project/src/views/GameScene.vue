@@ -15,10 +15,10 @@ let hasKey = false
 
 // Background music change points
 const musicMap = {
-  0: '/Prologue.mp3',
-  8: '/court.mp3',
-  17: '/Suspense.mp3',
-  35: '/Lobby.mp3',
+  "scene-0": '/Prologue.mp3',
+  "scene-8": '/court.mp3',
+  "scene-17": '/Suspense.mp3',
+  "scene-35": '/Lobby.mp3',
 }
 
 // ToDo: Jump to?
@@ -57,6 +57,7 @@ function maybeUnlockCheat() {
 function updateScene() {
   const currentScene = storyManager.getCurrentEvent
   if (videoElement) {
+    // ToDo: Console throwing errors about video
     videoElement.src = currentScene.video
     videoElement.currentTime = 0
     videoElement.play()
@@ -64,14 +65,13 @@ function updateScene() {
 
   maybeUnlockCheat()
 
-  // ToDo: fix the music
   // 🎵 切换背景音乐
-  // if (musicMap[currentIndex]) {
-  //   bgMusic.pause()
-  //   bgMusic.src = musicMap[currentIndex]
-  //   bgMusic.currentTime = 0
-  //   bgMusic.play()
-  // }
+  if (musicMap[currentScene.id]) {
+    bgMusic.pause()
+    bgMusic.src = musicMap[currentScene.id]
+    bgMusic.currentTime = 0
+    bgMusic.play()
+  }
 
   // ToDo: fix this
   // 🎯 evidence.mp4 获得两个特殊按钮
@@ -171,9 +171,6 @@ onMounted(() => {
   <div class="">
     <audio id="bg-music" src="court.mp3" loop></audio>
 
-    <!-- Overlay Here? -->
-    <!-- ToDo: Save/Load Function, Go to Main Menu, Or Sign out -->
-
     <!-- Main Content -->
     <div class="flex flex-col mx-auto h-full">
       <!-- Header -->
@@ -214,7 +211,7 @@ onMounted(() => {
           </button>
         </div>
 
-        <ChoicesBox v-bind="choicesButtonsProps" @choiceSelected="handleChoice" />
+        <ChoicesBox class="mt-4" v-bind="choicesButtonsProps" @choiceSelected="handleChoice" />
       </main>
     </div>
   </div>
