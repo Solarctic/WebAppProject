@@ -6,12 +6,21 @@ import { story } from '@/stores/story-data'
 import { onMounted, reactive } from 'vue'
 import { StoryManager } from '@/composables/story-manager'
 import router from '@/router'
+import { ref } from 'vue'
 
 // Game State
 const storyManager = new StoryManager(story)
 let cheatCount = 0
 let hasJade = false
 let hasKey = false
+
+// const notification = ref('')
+// const showNotification = (text, duration = 2000) => {
+//   message.value = text
+//   setTimeout(() => {
+//     message.value = ''
+//   }, duration)
+// }
 
 // Background music change points
 const musicMap = {
@@ -176,7 +185,6 @@ async function handleSaveClick() {
     },
     body: JSON.stringify({ save: storyManager.currentId }),
   })
-
   sessionStorage.setItem('save', storyManager.currentId)
 }
 </script>

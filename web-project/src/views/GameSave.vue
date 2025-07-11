@@ -80,11 +80,14 @@ function handleNewGameClick() {
 
 function handleLoadGameClick() {
   loadGame().then((save) => {
-    if (save != '') {
-      router.push('/game')
+    if (save !== '') {
+      setTimeout(() => {
+        router.push('/game')
+      }, 1500)
     }
   })
 }
+
 </script>
 
 <style scoped>
