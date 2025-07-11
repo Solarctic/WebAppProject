@@ -99,6 +99,18 @@ onMounted(() => {
       <main class="flex-1 flex flex-col p-5 overflow-hidden">
         <VideoPlayer @advance="handleVideoAdvanceClick" />
         <DialogueBox v-bind="dialogueBoxProps" />
+
+        <!-- Cheat Button -->
+        <div class="mb-4 text-right">
+          <button
+            id="cheat-button"
+            class="bg-yellow-400 hover:bg-yellow-500 px-4 py-2 rounded text-black font-bold"
+            disabled
+          >
+            😈 Cheat (0)
+          </button>
+        </div>
+
         <ChoicesBox v-bind="choicesButtonsProps" @choiceSelected="handleChoice" />
       </main>
     </div>
