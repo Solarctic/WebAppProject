@@ -14,13 +14,14 @@ let cheatCount = 0
 let hasJade = false
 let hasKey = false
 
-// const notification = ref('')
-// const showNotification = (text, duration = 2000) => {
-//   message.value = text
-//   setTimeout(() => {
-//     message.value = ''
-//   }, duration)
-// }
+const notification = ref('')
+
+const showNotification = (text, duration = 2000) => {
+  notification.value = text
+  setTimeout(() => {
+    notification.value = ''
+  }, duration)
+}
 
 // Background music change points
 const musicMap = {
@@ -178,23 +179,56 @@ onMounted(() => {
 async function handleSaveClick() {
   const userData = JSON.parse(sessionStorage.getItem('authToken') || '[]')[0]
 
-  const res = await fetch(`http://localhost:3000/users/${userData.id}`, {
-    method: 'PATCH',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({ save: storyManager.currentId }),
-  })
-  sessionStorage.setItem('save', storyManager.currentId)
+  try {
+    const res = await fetch(`http://localhost:3000/users/${userData.id}`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ save: storyManager.currentId }),
+    })
+
+    if (res.ok) {
+      sessionStorage.setItem('save', storyManager.currentId)
+      showNotification('Game has been saved')
+    } else {
+      showNotification('Failed to save game')
+    }
+  } catch (error) {
+    console.error(error)
+    showNotification('Error saving game')
+  }
 }
+
 </script>
+
+<style scoped>
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.3s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
+</style>
 
 <template>
   <div class="">
     <audio id="bg-music" src="court.mp3" loop></audio>
 
-    <!-- Main Content -->
     <div class="flex flex-col mx-auto h-full">
+
+      <transition name="fade">
+        <div v-if="notification"
+          class="fixed top-6 left-1/2 -translate-x-1/2 bg-rose-600 text-white font-semibold px-6 py-3 rounded shadow-lg z-50">
+          {{ notification }}
+        </div>
+      </transition>
+
+    <!-- Main Content -->
+
       <!-- Header -->
       <header class="p-3.5 text-center border-b-4 border-b-rose-500">
         <h1 class="m-0 text-4xl text-white text-shadow-[3px_3px_0] text-shadow-rose-500">
@@ -206,29 +240,22 @@ async function handleSaveClick() {
       <main class="flex-1 flex flex-col p-5 overflow-hidden">
         <VideoPlayer @advance="handleVideoAdvanceClick" />
 
+
+
         <!-- Cheat Button -->
         <div class="flex flex-row gap-4">
-          <button
-            id="menu-button"
-            class="bg-gray-400 hover:bg-gray-500 px-4 py-2 rounded text-black font-bold"
-            @click="router.push('/menu')"
-          >
+          <button id="menu-button" class="bg-gray-400 hover:bg-gray-500 px-4 py-2 rounded text-black font-bold"
+            @click="router.push('/menu')">
             Menu
           </button>
           <!-- ToDo: Save Behaviour -->
-          <button
-            id="save-button"
-            class="bg-gray-400 hover:bg-gray-500 px-4 py-2 rounded text-black font-bold"
-            @click="handleSaveClick"
-          >
+          <button id="save-button" class="bg-gray-400 hover:bg-gray-500 px-4 py-2 rounded text-black font-bold"
+            @click="handleSaveClick">
             Save
           </button>
 
-          <button
-            id="cheat-button"
-            class="bg-yellow-400 hover:bg-yellow-500 px-4 py-2 rounded text-black font-bold ml-auto"
-            disabled
-          >
+          <button id="cheat-button"
+            class="bg-yellow-400 hover:bg-yellow-500 px-4 py-2 rounded text-black font-bold ml-auto" disabled>
             😈 Cheat (0)
           </button>
         </div>
