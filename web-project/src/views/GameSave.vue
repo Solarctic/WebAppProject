@@ -1,6 +1,6 @@
 <script setup>
-import { ref } from 'vue';
-import router from '@/router';
+import { ref } from 'vue'
+import router from '@/router'
 
 const statusMessage = ref('')
 
@@ -15,7 +15,7 @@ const saveGame = async () => {
   }
 
   try {
-    const updatedSave = "Your game progress here..." // Replace with real game state
+    const updatedSave = 'Your game progress here...' // Replace with real game state
 
     const res = await fetch(`http://localhost:3000/users/${userData.id}`, {
       method: 'PATCH',
@@ -49,7 +49,7 @@ const loadGame = async () => {
   try {
     const res = await fetch(`http://localhost:3000/users/${userData.id}`)
     const data = await res.json()
-    
+
     statusMessage.value = `Loaded game: ${data.save || 'No save found.'}`
     showNotification(statusMessage.value)
 
@@ -69,7 +69,6 @@ const showNotification = (text, duration = 2000) => {
     message.value = ''
   }, duration)
 }
-
 </script>
 
 <style scoped>
@@ -95,11 +94,9 @@ const showNotification = (text, duration = 2000) => {
       </div>
     </transition>
 
-    <h1 class="text-6xl font-extrabold text-center drop-shadow-lg absolute top-24">
-      Save File
-    </h1>
-
     <div class="flex flex-col gap-12 w-72 items-center">
+      <h1 class="text-6xl font-extrabold text-center drop-shadow-lg">Save File</h1>
+
       <button
         @click="router.push('/game')"
         class="bg-rose-600 hover:bg-rose-700 transition-colors duration-300 rounded-lg py-4 text-xl font-semibold shadow-md w-full"
@@ -123,5 +120,3 @@ const showNotification = (text, duration = 2000) => {
     </div>
   </div>
 </template>
-
-

@@ -1,4 +1,6 @@
 // Story data
+
+// This is where you can write the story
 export const story = [
   {
     id: 'scene-0',
