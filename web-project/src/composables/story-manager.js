@@ -10,7 +10,7 @@ export class StoryManager {
     }
 
 
-    this.currentId = this.eventMap["beginning"]?.id || null
+    this.currentId = this.eventMap["scene-0"]?.id || null
   }
 
   get getCurrentEvent() {

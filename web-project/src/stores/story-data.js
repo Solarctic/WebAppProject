@@ -1,99 +1,437 @@
 // Story data
 export const story = [
   {
-    id: 'beginning',
-    video: '/beginning.mp4', // 新增开头视频
-    speaker: 'Narrator',
-    text: '',
-    choices: [], // 无按钮，点击视频推进
-    responses: [],
-    nextEvents: ['defendant'],
+    "id": "scene-0",
+    "video": "/jadeStolen.mp4",
+    "speaker": "",
+    "text": "",
+    "choices": [],
+    "responses": [],
+    "nextEvents": [
+      "scene-1"
+    ]
   },
   {
-    id: 'defendant',
-    video: '/1.mp4',
-    speaker: 'Phoenix Wright',
-    text: "The court finds the defendant... Wait, this can't be right!",
-    choices: [], // 还是无按钮，点击视频推进
-    responses: [''],
-    nextEvents: ['case airtight'],
+    "id": "scene-1",
+    "video": "/jadeStolen2.mp4",
+    "speaker": "",
+    "text": "",
+    "choices": [],
+    "responses": [],
+    "nextEvents": [
+      "scene-2"
+    ]
   },
   {
-    id: 'case airtight',
-    video: '/2.mp4',
-    speaker: 'Miles Edgeworth',
-    text: "The prosecution's case is airtight. What will you do?",
-    choices: ['Press Testimony', 'Analyze Scene', 'Challenge Claim', 'Object Now!'],
-    responses: [
-      'The witness is clearly hiding something!',
-      'The crime scene photos tell a different story!',
-      'That claim contradicts the forensic evidence!',
-      "OBJECTION! The prosecution's argument has fatal flaws!",
+    "id": "scene-2",
+    "video": "/mayaChat.mp4",
+    "speaker": "",
+    "text": "",
+    "choices": [],
+    "responses": [],
+    "nextEvents": [
+      "scene-3"
+    ]
+  },
+  {
+    "id": "scene-3",
+    "video": "/phoeAnw.mp4",
+    "speaker": "",
+    "text": "",
+    "choices": [],
+    "responses": [],
+    "nextEvents": [
+      "scene-4"
+    ]
+  },
+  {
+    "id": "scene-4",
+    "video": "/mayaChat2.mp4",
+    "speaker": "",
+    "text": "",
+    "choices": [],
+    "responses": [],
+    "nextEvents": [
+      "scene-5"
+    ]
+  },
+  {
+    "id": "scene-5",
+    "video": "/phoeAnw2.mp4",
+    "speaker": "",
+    "text": "",
+    "choices": [],
+    "responses": [],
+    "nextEvents": [
+      "scene-6"
+    ]
+  },
+  {
+    "id": "scene-6",
+    "video": "/doorKnock.mp4",
+    "speaker": "",
+    "text": "",
+    "choices": [
+      "open",
+      "leave it"
     ],
-    nextEvents: ['witness-hidden', 'photos', 'forensic', 'flaws'],
-  },
-
-  {
-    id: 'witness-hidden',
-    video: '/2.mp4',
-    speaker: 'Miles Edgeworth',
-    text: "HIDDEN????! HAHAHAHAH",
-    choices: [],
-    responses: [],
-    nextEvents: ['final-arugment'],
-  },
-
-  {
-    id: 'photos',
-    video: '/2.mp4',
-    speaker: 'Miles Edgeworth',
-    text: "Ah photos..... Well done",
-    choices: ['JUMP', 'RUN'],
-    responses: ['YAY', 'Bye going to home'],
-    nextEvents: ['final-arugment', 'final-arugment'],
-  },
-
-  {
-    id: 'forensic',
-    video: '/2.mp4',
-    speaker: 'Miles Edgeworth',
-    text: "Ah forensic.... we lost buddy",
-    choices: ['JUMP', 'RUN'],
-    responses: ['YAY', 'Bye going to home'],
-    nextEvents: ['final-arugment', 'final-arugment'],
-  },
-
-  {
-    id: 'flaws',
-    video: '/2.mp4',
-    speaker: 'Miles Edgeworth',
-    text: "What flaws? lol",
-    choices: ['Fight', 'loser'],
-    responses: ['fight', 'you lost'],
-    nextEvents: ['final-arugment', 'final-arugment'],
-  },
-
-  {
-    id: 'final-arugment',
-    video: '/3.mp4',
-    speaker: 'Judge',
-    text: 'The court will hear your final argument.',
-    choices: ['Present Truth', 'Reveal Culprit', 'Expose Lies', 'Final Objection'],
-    responses: [
-      'The truth points to someone else entirely!',
-      'The real culprit is in this courtroom right now!',
-      'These lies have gone on long enough!',
-      'OBJECTION! The defense has proven its case!',
+    "responses": [
+      "",
+      ""
     ],
-    nextEvents: ['end', 'end', 'end', 'end'],
+    "nextEvents": [
+      "scene-8",
+      "scene-7"
+    ]
   },
   {
-    id: 'end',
-    video: '/end.mp4',
-    speaker: 'Judge',
-    text: 'Court is adjourned. The defendant is... NOT GUILTY!',
-    choices: [],
-    responses: [],
-    nextEvents: [],
+    "id": "scene-7",
+    "video": "/lazyEnd.mp4",
+    "speaker": "",
+    "text": "",
+    "choices": [
+      "restart",
+      "choose again"
+    ],
+    "responses": [
+      "",
+      ""
+    ],
+    "nextEvents": [
+      "scene-0",
+      "scene-6"
+    ]
   },
+  {
+    "id": "scene-8",
+    "video": "/mission.mp4",
+    "speaker": "",
+    "text": "",
+    "choices": [],
+    "responses": [],
+    "nextEvents": [
+      "scene-9"
+    ]
+  },
+  {
+    "id": "scene-9",
+    "video": "/mission2.mp4",
+    "speaker": "",
+    "text": "",
+    "choices": [],
+    "responses": [],
+    "nextEvents": [
+      "scene-10"
+    ]
+  },
+  {
+    "id": "scene-10",
+    "video": "/mission3.mp4",
+    "speaker": "",
+    "text": "",
+    "choices": [],
+    "responses": [],
+    "nextEvents": [
+      "scene-11"
+    ]
+  },
+  {
+    "id": "scene-11",
+    "video": "/mission4.mp4",
+    "speaker": "",
+    "text": "",
+    "choices": [],
+    "responses": [],
+    "nextEvents": [
+      "scene-12"
+    ]
+  },
+  {
+    "id": "scene-12",
+    "video": "/mission5.mp4",
+    "speaker": "",
+    "text": "",
+    "choices": [],
+    "responses": [],
+    "nextEvents": [
+      "scene-13"
+    ]
+  },
+  {
+    "id": "scene-13",
+    "video": "/mission6.mp4",
+    "speaker": "",
+    "text": "",
+    "choices": [],
+    "responses": [],
+    "nextEvents": [
+      "scene-14"
+    ]
+  },
+  {
+    "id": "scene-14",
+    "video": "/mission7.mp4",
+    "speaker": "",
+    "text": "",
+    "choices": [],
+    "responses": [],
+    "nextEvents": [
+      "scene-15"
+    ]
+  },
+  {
+    "id": "scene-15",
+    "video": "/mission8.mp4",
+    "speaker": "",
+    "text": "",
+    "choices": [],
+    "responses": [],
+    "nextEvents": [
+      "scene-16"
+    ]
+  },
+  {
+    "id": "scene-16",
+    "video": "/mission9.mp4",
+    "speaker": "",
+    "text": "",
+    "choices": [],
+    "responses": [],
+    "nextEvents": [
+      "scene-17"
+    ]
+  },
+  {
+    "id": "scene-17",
+    "video": "/day0.mp4",
+    "speaker": "",
+    "text": "",
+    "choices": [],
+    "responses": [],
+    "nextEvents": [
+      "scene-18"
+    ]
+  },
+  {
+    "id": "scene-18",
+    "video": "/rply.mp4",
+    "speaker": "",
+    "text": "",
+    "choices": [],
+    "responses": [],
+    "nextEvents": [
+      "scene-19"
+    ]
+  },
+  {
+    "id": "scene-19",
+    "video": "/day1.mp4",
+    "speaker": "",
+    "text": "",
+    "choices": [],
+    "responses": [],
+    "nextEvents": [
+      "scene-20"
+    ]
+  },
+  {
+    "id": "scene-20",
+    "video": "/day2.mp4",
+    "speaker": "",
+    "text": "",
+    "choices": [],
+    "responses": [],
+    "nextEvents": [
+      "scene-21"
+    ]
+  },
+  {
+    "id": "scene-21",
+    "video": "/day3.mp4",
+    "speaker": "",
+    "text": "",
+    "choices": [
+      "Ask about the jade",
+      "Ask why pushed"
+    ],
+    "responses": [
+      "",
+      ""
+    ],
+    "nextEvents": [
+      "scene-22",
+      "scene-28"
+    ]
+  },
+  {
+    "id": "scene-22",
+    "video": "/day4.mp4",
+    "speaker": "",
+    "text": "",
+    "choices": [],
+    "responses": [],
+    "nextEvents": []
+  },
+  {
+    "id": "scene-23",
+    "video": "/day5.mp4",
+    "speaker": "",
+    "text": "",
+    "choices": [],
+    "responses": [],
+    "nextEvents": []
+  },
+  {
+    "id": "scene-24",
+    "video": "/day6.mp4",
+    "speaker": "",
+    "text": "",
+    "choices": [],
+    "responses": [],
+    "nextEvents": []
+  },
+  {
+    "id": "scene-25",
+    "video": "/push0.mp4",
+    "speaker": "",
+    "text": "",
+    "choices": [],
+    "responses": [],
+    "nextEvents": []
+  },
+  {
+    "id": "scene-26",
+    "video": "/push1.mp4",
+    "speaker": "",
+    "text": "",
+    "choices": [],
+    "responses": [],
+    "nextEvents": []
+  },
+  {
+    "id": "scene-27",
+    "video": "/push2.mp4",
+    "speaker": "",
+    "text": "",
+    "choices": [],
+    "responses": [],
+    "nextEvents": []
+  },
+  {
+    "id": "scene-28",
+    "video": "/push0.mp4",
+    "speaker": "",
+    "text": "",
+    "choices": [],
+    "responses": [],
+    "nextEvents": []
+  },
+  {
+    "id": "scene-29",
+    "video": "/push1.mp4",
+    "speaker": "",
+    "text": "",
+    "choices": [],
+    "responses": [],
+    "nextEvents": []
+  },
+  {
+    "id": "scene-30",
+    "video": "/push2.mp4",
+    "speaker": "",
+    "text": "",
+    "choices": [],
+    "responses": [],
+    "nextEvents": []
+  },
+  {
+    "id": "scene-31",
+    "video": "/day4.mp4",
+    "speaker": "",
+    "text": "",
+    "choices": [],
+    "responses": [],
+    "nextEvents": []
+  },
+  {
+    "id": "scene-32",
+    "video": "/day5.mp4",
+    "speaker": "",
+    "text": "",
+    "choices": [],
+    "responses": [],
+    "nextEvents": []
+  },
+  {
+    "id": "scene-33",
+    "video": "/day6.mp4",
+    "speaker": "",
+    "text": "",
+    "choices": [],
+    "responses": [],
+    "nextEvents": []
+  },
+  {
+    "id": "scene-34",
+    "video": "/evidence.mp4",
+    "speaker": "",
+    "text": "",
+    "choices": [],
+    "responses": [],
+    "nextEvents": []
+  },
+  {
+    "id": "scene-35",
+    "video": "/new.mp4",
+    "speaker": "",
+    "text": "",
+    "choices": [],
+    "responses": [],
+    "nextEvents": []
+  },
+  {
+    "id": "scene-36",
+    "video": "/hall1.mp4",
+    "speaker": "",
+    "text": "",
+    "choices": [],
+    "responses": [],
+    "nextEvents": []
+  },
+  {
+    "id": "scene-37",
+    "video": "/hall2.mp4",
+    "speaker": "",
+    "text": "",
+    "choices": [],
+    "responses": [],
+    "nextEvents": []
+  },
+  {
+    "id": "scene-38",
+    "video": "/hall3.mp4",
+    "speaker": "",
+    "text": "",
+    "choices": [],
+    "responses": [],
+    "nextEvents": []
+  },
+  {
+    "id": "scene-39",
+    "video": "/hall4.mp4",
+    "speaker": "",
+    "text": "",
+    "choices": [],
+    "responses": [],
+    "nextEvents": []
+  },
+  {
+    "id": "scene-40",
+    "video": "/hall5.mp4",
+    "speaker": "",
+    "text": "",
+    "choices": [],
+    "responses": [],
+    "nextEvents": []
+  }
 ]
