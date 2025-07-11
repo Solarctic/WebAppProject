@@ -6,7 +6,19 @@ import { story } from '@/stores/story-data'
 import { onMounted, reactive } from 'vue'
 import { StoryManager } from '@/composables/story-manager'
 
+// Game State
 const storyManager = new StoryManager(story)
+let cheatCount = 0
+let hasJade = false
+let hasKey = false
+
+// Background music change points
+const musicMap = {
+  0: '/Prologue.mp3',
+  8: '/court.mp3',
+  17: '/Suspense.mp3',
+  35: '/Lobby.mp3',
+}
 
 // ToDo: Jump to?
 
@@ -21,6 +33,24 @@ const choicesButtonsProps = reactive({
 // Get DOM elements references
 let videoElement = null
 let bgMusic = null
+let cheatButton = null
+// -- Special buttons --
+let specialBtn1 = null
+let specialBtn2 = null
+
+// -- Cheat Button --
+function updateCheatButton() {
+  cheatButton.textContent = `😈 Cheat (${cheatCount})`
+  cheatButton.disabled = cheatCount <= 0
+}
+
+function maybeUnlockCheat() {
+  const currentScene = storyManager.getCurrentEvent
+  if (currentScene.id === 'scene-7') {
+    cheatCount++
+    updateCheatButton()
+  }
+}
 
 // Update scene function accessible everywhere
 function updateScene() {
@@ -30,6 +60,30 @@ function updateScene() {
     videoElement.currentTime = 0
     videoElement.play()
   }
+
+  maybeUnlockCheat()
+
+  // ToDo: fix the music
+  // 🎵 切换背景音乐
+  // if (musicMap[currentIndex]) {
+  //   bgMusic.pause()
+  //   bgMusic.src = musicMap[currentIndex]
+  //   bgMusic.currentTime = 0
+  //   bgMusic.play()
+  // }
+
+  // ToDo: fix this
+  // 🎯 evidence.mp4 获得两个特殊按钮
+  // if (currentIndex === 34) {
+  //   if (!hasJade) {
+  //     specialBtn1.style.display = 'inline-block'
+  //     hasJade = true
+  //   }
+  //   if (!hasKey) {
+  //     specialBtn2.style.display = 'inline-block'
+  //     hasKey = true
+  //   }
+  // }
 
   dialogueBoxProps.speakerName = currentScene.speaker
   dialogueBoxProps.text = currentScene.text
@@ -70,6 +124,39 @@ function handleVideoAdvanceClick() {
 onMounted(() => {
   videoElement = document.getElementById('video-container')
   bgMusic = document.getElementById('bg-music')
+  cheatButton = document.getElementById('cheat-button')
+  
+  // -- speical buttons --
+  specialBtn1 = document.createElement('button')
+  specialBtn1.textContent = 'The Imperial Jade with blood'
+  specialBtn1.className =
+    'bg-green-500 hover:bg-green-600 px-4 py-2 rounded text-white font-bold ml-2'
+  specialBtn1.style.display = 'none'
+
+  specialBtn2 = document.createElement('button')
+  specialBtn2.textContent = 'Testimony: Key'
+  specialBtn2.className =
+    'bg-blue-500 hover:bg-blue-600 px-4 py-2 rounded text-white font-bold ml-2'
+  specialBtn2.style.display = 'none'
+
+  cheatButton.after(specialBtn1, specialBtn2)
+
+  cheatButton.addEventListener('click', () => {
+    if (cheatCount <= 0) return
+    cheatCount--
+    updateCheatButton()
+
+    setTimeout(() => {
+      // ToDo: fix this
+      // if (currentIndex === 6) {
+      //   currentIndex = 8
+      // } else if (currentIndex < story.length - 1) {
+      //   currentIndex++
+      // }
+      // updateScene()
+      // jumpedToEnd = false
+    }, 1000)
+  })
 
   if (bgMusic) {
     bgMusic.play()
@@ -98,7 +185,7 @@ onMounted(() => {
       <!-- The Main Layout -->
       <main class="flex-1 flex flex-col p-5 overflow-hidden">
         <VideoPlayer @advance="handleVideoAdvanceClick" />
-        <DialogueBox v-bind="dialogueBoxProps" />
+        <!-- <DialogueBox v-bind="dialogueBoxProps" /> -->
 
         <!-- Cheat Button -->
         <div class="mb-4 text-right">

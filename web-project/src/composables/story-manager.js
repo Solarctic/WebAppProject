@@ -2,6 +2,7 @@ import { StoryEvent } from '@/composables/models/story-event'
 
 export class StoryManager {
   constructor(events = []) {
+    // ToDo: Change the data system. Prob use node list or something
     // Make a lookup table
     this.eventMap = new Map()
 
