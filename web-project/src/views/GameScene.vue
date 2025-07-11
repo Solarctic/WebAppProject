@@ -5,6 +5,7 @@ import ChoicesBox from '@/components/ChoicesBox.vue'
 import { story } from '@/stores/story-data'
 import { onMounted, reactive } from 'vue'
 import { StoryManager } from '@/composables/story-manager'
+import router from '@/router'
 
 // Game State
 const storyManager = new StoryManager(story)
@@ -125,7 +126,7 @@ onMounted(() => {
   videoElement = document.getElementById('video-container')
   bgMusic = document.getElementById('bg-music')
   cheatButton = document.getElementById('cheat-button')
-  
+
   // -- speical buttons --
   specialBtn1 = document.createElement('button')
   specialBtn1.textContent = 'The Imperial Jade with blood'
@@ -188,10 +189,25 @@ onMounted(() => {
         <!-- <DialogueBox v-bind="dialogueBoxProps" /> -->
 
         <!-- Cheat Button -->
-        <div class="mb-4 text-right">
+        <div class="flex flex-row gap-4">
+          <button
+            id="menu-button"
+            class="bg-gray-400 hover:bg-gray-500 px-4 py-2 rounded text-black font-bold"
+            @click="router.push('/menu')"
+          >
+            Menu
+          </button>
+          <!-- ToDo: Save Behaviour -->
+          <button
+            id="save-button"
+            class="bg-gray-400 hover:bg-gray-500 px-4 py-2 rounded text-black font-bold"
+          >
+            Save
+          </button>
+
           <button
             id="cheat-button"
-            class="bg-yellow-400 hover:bg-yellow-500 px-4 py-2 rounded text-black font-bold"
+            class="bg-yellow-400 hover:bg-yellow-500 px-4 py-2 rounded text-black font-bold ml-auto"
             disabled
           >
             😈 Cheat (0)
