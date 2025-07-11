@@ -21,7 +21,9 @@ const musicMap = {
   'scene-35': '/Lobby.mp3',
 }
 
-// ToDo: Jump to?
+// Get current logged-in user from session
+const saveID = sessionStorage.getItem('save')
+storyManager.jumpTo(saveID)
 
 const dialogueBoxProps = reactive({
   speakerName: 'Player',
@@ -163,6 +165,20 @@ onMounted(() => {
 
   updateScene()
 })
+
+async function handleSaveClick() {
+  const userData = JSON.parse(sessionStorage.getItem('authToken') || '[]')[0]
+
+  const res = await fetch(`http://localhost:3000/users/${userData.id}`, {
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ save: storyManager.currentId }),
+  })
+
+  sessionStorage.setItem('save', storyManager.currentId)
+}
 </script>
 
 <template>
@@ -195,6 +211,7 @@ onMounted(() => {
           <button
             id="save-button"
             class="bg-gray-400 hover:bg-gray-500 px-4 py-2 rounded text-black font-bold"
+            @click="handleSaveClick"
           >
             Save
           </button>

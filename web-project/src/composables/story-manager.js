@@ -184,7 +184,7 @@ export class StoryManager extends LinkedList {
   // For Load fn
   jumpTo(index) {
     if (this.findEventById(index)) {
-      this.currentId = this.this.findEventById(index).id
+      this.currentId = this.findEventById(index).id
     }
   }
 }

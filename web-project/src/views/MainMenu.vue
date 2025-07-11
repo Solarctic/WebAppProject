@@ -2,7 +2,7 @@
 import router from '@/router'
 
 const logout = () => {
-  sessionStorage.removeItem('authToken') // or use clear() if needed
+  sessionStorage.clear() // or use clear() if needed
   router.push('/')
 }
 </script>

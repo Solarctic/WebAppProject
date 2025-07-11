@@ -34,6 +34,7 @@ const handleLogin = async () => {
 
     if (data.length > 0) {
       sessionStorage.setItem('authToken', JSON.stringify(data))
+      sessionStorage.setItem('save', data[0].save)
       showNotification(`Welcome, ${data[0].name}!`)
       setTimeout(() => {
         router.push('/game')
@@ -47,9 +48,8 @@ const handleLogin = async () => {
   }
 }
 
-
 // ToDo: Include the data to the session (ideally use token rather than entire info)
-    // sessionStorage.setItem("authToken", JSON.stringify(data));
+// sessionStorage.setItem("authToken", JSON.stringify(data));
 const handleSignup = async () => {
   if (!username.value || !password.value) {
     showNotification('Please enter both username and password')
@@ -58,9 +58,7 @@ const handleSignup = async () => {
 
   try {
     //Check if username already exists
-    const checkRes = await fetch(
-      `http://localhost:3000/users?name=${username.value}`
-    )
+    const checkRes = await fetch(`http://localhost:3000/users?name=${username.value}`)
     const existingUsers = await checkRes.json()
 
     if (existingUsers.length > 0) {
@@ -77,12 +75,12 @@ const handleSignup = async () => {
       body: JSON.stringify({
         name: username.value,
         password: password.value,
-        save: "", //check
+        save: '', //check
       }),
     })
 
     const newUser = await createRes.json()
-    console.log("Created user:", newUser)
+    console.log('Created user:', newUser)
 
     //Store user in session (note: use a real token system in production)
     sessionStorage.setItem('authToken', JSON.stringify([newUser]))
@@ -96,7 +94,6 @@ const handleSignup = async () => {
     console.error(err)
   }
 }
-
 
 if (sessionStorage.getItem('authToken')) {
   router.push('/menu')

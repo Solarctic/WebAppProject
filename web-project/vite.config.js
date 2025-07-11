@@ -9,16 +9,15 @@ import vueDevTools from 'vite-plugin-vue-devtools'
 export default defineConfig({
   // Bind to the network interface
   server: {
-    host: '0.0.0.0'
+    host: '0.0.0.0',
+    watch: {
+      ignored: ['**/db.json'],
+    },
   },
-  plugins: [
-    vue(),
-    tailwindcss(),
-    vueDevTools(),
-  ],
+  plugins: [vue(), tailwindcss(), vueDevTools()],
   resolve: {
     alias: {
-      '@': fileURLToPath(new URL('./src', import.meta.url))
+      '@': fileURLToPath(new URL('./src', import.meta.url)),
     },
   },
 })
