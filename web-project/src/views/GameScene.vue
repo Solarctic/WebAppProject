@@ -73,18 +73,17 @@ function updateScene() {
     bgMusic.play()
   }
 
-  // ToDo: fix this
   // 🎯 evidence.mp4 获得两个特殊按钮
-  // if (currentIndex === 34) {
-  //   if (!hasJade) {
-  //     specialBtn1.style.display = 'inline-block'
-  //     hasJade = true
-  //   }
-  //   if (!hasKey) {
-  //     specialBtn2.style.display = 'inline-block'
-  //     hasKey = true
-  //   }
-  // }
+  if (currentScene.id === 'scene-34') {
+    if (!hasJade) {
+      specialBtn1.style.display = 'inline-block'
+      hasJade = true
+    }
+    if (!hasKey) {
+      specialBtn2.style.display = 'inline-block'
+      hasKey = true
+    }
+  }
 
   dialogueBoxProps.speakerName = currentScene.speaker
   dialogueBoxProps.text = currentScene.text
@@ -183,7 +182,6 @@ onMounted(() => {
       <!-- The Main Layout -->
       <main class="flex-1 flex flex-col p-5 overflow-hidden">
         <VideoPlayer @advance="handleVideoAdvanceClick" />
-        <!-- <DialogueBox v-bind="dialogueBoxProps" /> -->
 
         <!-- Cheat Button -->
         <div class="flex flex-row gap-4">
@@ -210,6 +208,9 @@ onMounted(() => {
             😈 Cheat (0)
           </button>
         </div>
+
+                <DialogueBox v-bind="dialogueBoxProps" />
+
 
         <ChoicesBox class="mt-4" v-bind="choicesButtonsProps" @choiceSelected="handleChoice" />
       </main>
