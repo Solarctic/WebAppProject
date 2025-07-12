@@ -1,56 +1,54 @@
 <script setup>
-import VideoPlayer from '@/components/VideoPlayer.vue'
+import { ref, onMounted, onBeforeUnmount, reactive } from 'vue'
 import DialogueBox from '@/components/DialogueBox.vue'
 import ChoicesBox from '@/components/ChoicesBox.vue'
 import { story } from '@/stores/story-data'
-import { onMounted, reactive } from 'vue'
 import { StoryManager } from '@/composables/story-manager'
 import router from '@/router'
-import { ref } from 'vue'
 
-// Game State
 const storyManager = new StoryManager(story)
 let cheatCount = 0
-let hasJade = false
-let hasKey = false
 
-// const notification = ref('')
-// const showNotification = (text, duration = 2000) => {
-//   message.value = text
-//   setTimeout(() => {
-//     message.value = ''
-//   }, duration)
-// }
+// 改成响应式变量
+const hasJade = ref(false)
+const hasKey = ref(false)
 
-// Background music change points
 const musicMap = {
   'scene-0': '/Prologue.mp3',
   'scene-8': '/court.mp3',
-  'scene-17': '/Suspense.mp3',
+  'scene-17': '/investigation.mp3',
   'scene-35': '/Lobby.mp3',
+  'scene-42': '/logic.mp3',
+  'scene-56': '/exam.mp3',
+  'scene-77': '/zhansha.mp3',
+  'scene-106': '/tellthetruth.mp3',
 }
 
-// Get current logged-in user from session
+const findClosestMusic = (sceneId) => {
+  const num = parseInt(sceneId.replace('scene-', ''))
+  for (let i = num; i >= 0; i--) {
+    const key = `scene-${i}`
+    if (key in musicMap) return musicMap[key]
+  }
+  return null
+}
+
 const saveID = sessionStorage.getItem('save')
-storyManager.jumpTo(saveID)
+if (saveID) storyManager.jumpTo(saveID)
 
-const dialogueBoxProps = reactive({
-  speakerName: 'Player',
-  text: 'Test',
-})
-const choicesButtonsProps = reactive({
-  choices: [],
-})
+// 读取持久化的 hasJade 和 hasKey，刷新也能保持状态
+const persistedHasJade = sessionStorage.getItem('hasJade')
+const persistedHasKey = sessionStorage.getItem('hasKey')
+if (persistedHasJade === 'true') hasJade.value = true
+if (persistedHasKey === 'true') hasKey.value = true
 
-// Get DOM elements references
+const dialogueBoxProps = reactive({ speakerName: 'Player', text: 'Test' })
+const choicesButtonsProps = reactive({ choices: [] })
+
 let videoElement = null
 let bgMusic = null
 let cheatButton = null
-// -- Special buttons --
-let specialBtn1 = null
-let specialBtn2 = null
 
-// -- Cheat Button --
 function updateCheatButton() {
   cheatButton.textContent = `😈 Cheat (${cheatCount})`
   cheatButton.disabled = cheatCount <= 0
@@ -64,11 +62,9 @@ function maybeUnlockCheat() {
   }
 }
 
-// Update scene function accessible everywhere
 function updateScene() {
   const currentScene = storyManager.getCurrentEvent
   if (videoElement) {
-    // ToDo: Console throwing errors about video
     videoElement.src = currentScene.video
     videoElement.currentTime = 0
     videoElement.play()
@@ -76,59 +72,69 @@ function updateScene() {
 
   maybeUnlockCheat()
 
-  // 🎵 切换背景音乐
-  if (musicMap[currentScene.id]) {
+  const music = findClosestMusic(currentScene.id)
+  const absPath = music ? location.origin + music : null
+
+  if (music === null) {
     bgMusic.pause()
-    bgMusic.src = musicMap[currentScene.id]
+    bgMusic.removeAttribute('src')
+    bgMusic.load()
+  } else if (absPath && bgMusic.src !== absPath) {
+    bgMusic.pause()
+    bgMusic.src = music
     bgMusic.currentTime = 0
     bgMusic.play()
   }
 
-  // 🎯 evidence.mp4 获得两个特殊按钮
-  if (currentScene.id === 'scene-34') {
-    if (!hasJade) {
-      specialBtn1.style.display = 'inline-block'
-      hasJade = true
-    }
-    if (!hasKey) {
-      specialBtn2.style.display = 'inline-block'
-      hasKey = true
-    }
+  // 经过 scene-34 后永久显示文本
+  if (!hasJade.value && currentScene.id === 'scene-34') {
+    hasJade.value = true
+    hasKey.value = true
+    // 保存状态到 sessionStorage
+    sessionStorage.setItem('hasJade', 'true')
+    sessionStorage.setItem('hasKey', 'true')
   }
 
   dialogueBoxProps.speakerName = currentScene.speaker
   dialogueBoxProps.text = currentScene.text
-
   choicesButtonsProps.choices = currentScene.choices
 }
 
-// Handle choice selection
 function handleChoice(index) {
   const currentScene = storyManager.getCurrentEvent
-  if (index >= currentScene.responses.length) {
-    return
-  }
-
+  if (index >= currentScene.choices.length) return
   choicesButtonsProps.choices = []
   dialogueBoxProps.speakerName = 'Player'
-  dialogueBoxProps.text = currentScene.responses[index]
-
+  dialogueBoxProps.text =
+    currentScene.responses && currentScene.responses[index] !== undefined
+      ? currentScene.responses[index]
+      : ''
   setTimeout(() => {
     const event = storyManager.makeChoice(index)
-    if (event) {
-      updateScene()
-    }
+    if (event) updateScene()
   }, 3500)
 }
 
-function handleVideoAdvanceClick() {
+function onVideoClick() {
+  if (!videoElement) return
   const currentScene = storyManager.getCurrentEvent
+  const nearEnd = videoElement.currentTime >= videoElement.duration - 0.1
 
-  if (currentScene.choices.length == 0) {
-    const event = storyManager.makeChoice(0)
-    if (event) {
-      updateScene()
+  if (currentScene.id === 'scene-76') {
+    if (!nearEnd) {
+      videoElement.currentTime = videoElement.duration - 0.05
+      videoElement.pause()
     }
+    return
+  }
+
+  if (!nearEnd) {
+    videoElement.currentTime = videoElement.duration - 0.05
+    videoElement.pause()
+  } else {
+    if (currentScene.choices.length > 0) return
+    const event = storyManager.makeChoice(0)
+    if (event) updateScene()
   }
 }
 
@@ -136,27 +142,12 @@ onMounted(() => {
   videoElement = document.getElementById('video-container')
   bgMusic = document.getElementById('bg-music')
   cheatButton = document.getElementById('cheat-button')
-
-  // -- speical buttons --
-  specialBtn1 = document.createElement('button')
-  specialBtn1.textContent = 'The Imperial Jade with blood'
-  specialBtn1.className =
-    'bg-green-500 hover:bg-green-600 px-4 py-2 rounded text-white font-bold ml-2'
-  specialBtn1.style.display = 'none'
-
-  specialBtn2 = document.createElement('button')
-  specialBtn2.textContent = 'Testimony: Key'
-  specialBtn2.className =
-    'bg-blue-500 hover:bg-blue-600 px-4 py-2 rounded text-white font-bold ml-2'
-  specialBtn2.style.display = 'none'
-
-  cheatButton.after(specialBtn1, specialBtn2)
+  if (videoElement) videoElement.addEventListener('click', onVideoClick)
 
   cheatButton.addEventListener('click', () => {
     if (cheatCount <= 0) return
     cheatCount--
     updateCheatButton()
-
     setTimeout(() => {
       const currentScene = storyManager.getCurrentEvent
       if (currentScene.id === 'scene-6') {
@@ -168,21 +159,18 @@ onMounted(() => {
     }, 1000)
   })
 
-  if (bgMusic) {
-    bgMusic.play()
-  }
-
   updateScene()
+})
+
+onBeforeUnmount(() => {
+  if (videoElement) videoElement.removeEventListener('click', onVideoClick)
 })
 
 async function handleSaveClick() {
   const userData = JSON.parse(sessionStorage.getItem('authToken') || '[]')[0]
-
-  const res = await fetch(`http://localhost:3000/users/${userData.id}`, {
+  await fetch(`http://localhost:3000/users/${userData.id}`, {
     method: 'PATCH',
-    headers: {
-      'Content-Type': 'application/json',
-    },
+    headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ save: storyManager.currentId }),
   })
   sessionStorage.setItem('save', storyManager.currentId)
@@ -190,24 +178,22 @@ async function handleSaveClick() {
 </script>
 
 <template>
-  <div class="">
-    <audio id="bg-music" src="court.mp3" loop></audio>
-
-    <!-- Main Content -->
+  <div>
+    <audio id="bg-music" loop></audio>
     <div class="flex flex-col mx-auto h-full">
-      <!-- Header -->
       <header class="p-3.5 text-center border-b-4 border-b-rose-500">
         <h1 class="m-0 text-4xl text-white text-shadow-[3px_3px_0] text-shadow-rose-500">
           Text Adventure
         </h1>
       </header>
-
-      <!-- The Main Layout -->
       <main class="flex-1 flex flex-col p-5 overflow-hidden">
-        <VideoPlayer @advance="handleVideoAdvanceClick" />
-
-        <!-- Cheat Button -->
-        <div class="flex flex-row gap-4">
+        <video
+          id="video-container"
+          class="w-full max-h-[50vh] rounded-md cursor-pointer"
+          playsinline
+          preload="auto"
+        ></video>
+        <div class="flex flex-row gap-4 mt-4">
           <button
             id="menu-button"
             class="bg-gray-400 hover:bg-gray-500 px-4 py-2 rounded text-black font-bold"
@@ -215,7 +201,6 @@ async function handleSaveClick() {
           >
             Menu
           </button>
-          <!-- ToDo: Save Behaviour -->
           <button
             id="save-button"
             class="bg-gray-400 hover:bg-gray-500 px-4 py-2 rounded text-black font-bold"
@@ -223,7 +208,6 @@ async function handleSaveClick() {
           >
             Save
           </button>
-
           <button
             id="cheat-button"
             class="bg-yellow-400 hover:bg-yellow-500 px-4 py-2 rounded text-black font-bold ml-auto"
@@ -233,8 +217,21 @@ async function handleSaveClick() {
           </button>
         </div>
 
-        <DialogueBox v-bind="dialogueBoxProps" />
+        <!-- 常驻文本区，只有触发过 scene-34 后显示 -->
+        <div v-if="hasJade && hasKey" class="mt-2 flex gap-4 select-none">
+          <span
+            class="px-3 py-1 rounded font-bold text-white bg-green-600"
+            style="user-select: none"
+            >The Imperial Jade with blood: Only Li's fingerprint detected.</span
+          >
+          <span
+            class="px-3 py-1 rounded font-bold text-white bg-yellow-600"
+            style="user-select: none"
+            >Key Record: Only Li and professor Huang has the key.</span
+          >
+        </div>
 
+        <DialogueBox v-bind="dialogueBoxProps" />
         <ChoicesBox class="mt-4" v-bind="choicesButtonsProps" @choiceSelected="handleChoice" />
       </main>
     </div>
