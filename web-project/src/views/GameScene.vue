@@ -13,6 +13,15 @@ let cheatCount = 0
 const hasJade = ref(false)
 const hasKey = ref(false)
 
+const notification = ref('')
+
+const showNotification = (text, duration = 2000) => {
+  notification.value = text
+  setTimeout(() => {
+    notification.value = ''
+  }, duration)
+}
+
 const musicMap = {
   'scene-0': '/Prologue.mp3',
   'scene-8': '/court.mp3',
@@ -168,19 +177,54 @@ onBeforeUnmount(() => {
 
 async function handleSaveClick() {
   const userData = JSON.parse(sessionStorage.getItem('authToken') || '[]')[0]
-  await fetch(`http://localhost:3000/users/${userData.id}`, {
-    method: 'PATCH',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ save: storyManager.currentId }),
-  })
-  sessionStorage.setItem('save', storyManager.currentId)
+  try {
+    const res = await fetch(`http://localhost:3000/users/${userData.id}`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ save: storyManager.currentId }),
+    })
+
+    if (res.ok) {
+      sessionStorage.setItem('save', storyManager.currentId)
+      showNotification('Game has been saved')
+    } else {
+      showNotification('Failed to save game')
+    }
+  } catch (error) {
+    console.error(error)
+    showNotification('Error saving game')
+  }
 }
+
 </script>
+
+<style scoped>
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.3s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
+</style>
 
 <template>
   <div>
     <audio id="bg-music" loop></audio>
     <div class="flex flex-col mx-auto h-full">
+
+
+       <transition name="fade">
+        <div v-if="notification"
+          class="fixed top-6 left-1/2 -translate-x-1/2 bg-rose-600 text-white font-semibold px-6 py-3 rounded shadow-lg z-50">
+          {{ notification }}
+        </div>
+      </transition>
+
       <header class="p-3.5 text-center border-b-4 border-b-rose-500">
         <h1 class="m-0 text-4xl text-white text-shadow-[3px_3px_0] text-shadow-rose-500">
           Text Adventure
