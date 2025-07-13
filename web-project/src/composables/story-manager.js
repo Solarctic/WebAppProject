@@ -1,6 +1,6 @@
 import { StoryEvent } from '@/composables/models/story-event'
 
-// Custom Linked List from https://codedamn.com/news/nodejs/custom-data-structures
+// Custom Node & Linked List from https://codedamn.com/news/nodejs/custom-data-structures
 
 class Node {
   constructor(data) {
@@ -116,6 +116,7 @@ class LinkedList {
   }
 }
 
+// Story Manager that mange the branches of choices or story
 export class StoryManager extends LinkedList {
   constructor(events = []) {
     super()

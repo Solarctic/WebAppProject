@@ -7,21 +7,20 @@ import { StoryManager } from '@/composables/story-manager'
 import router from '@/router'
 
 const storyManager = new StoryManager(story)
-let cheatCount = 0
+const saveID = sessionStorage.getItem('save')
+if (saveID) storyManager.jumpTo(saveID)
 
+let cheatCount = 0
 // 改成响应式变量
 const hasJade = ref(false)
 const hasKey = ref(false)
-
 const notification = ref('')
-
-const showNotification = (text, duration = 2000) => {
-  notification.value = text
-  setTimeout(() => {
-    notification.value = ''
-  }, duration)
-}
-
+// 读取持久化的 hasJade 和 hasKey，刷新也能保持状态
+const persistedHasJade = sessionStorage.getItem('hasJade')
+const persistedHasKey = sessionStorage.getItem('hasKey')
+if (persistedHasJade === 'true') hasJade.value = true
+if (persistedHasKey === 'true') hasKey.value = true
+// Music
 const musicMap = {
   'scene-0': '/Prologue.mp3',
   'scene-8': '/court.mp3',
@@ -32,7 +31,23 @@ const musicMap = {
   'scene-77': '/zhansha.mp3',
   'scene-106': '/tellthetruth.mp3',
 }
+// DOM elements
+let videoElement = null
+let bgMusic = null
+let cheatButton = null
+// Props
+const dialogueBoxProps = reactive({ speakerName: 'Player', text: 'Test' })
+const choicesButtonsProps = reactive({ choices: [] })
 
+// Notification fn
+const showNotification = (text, duration = 2000) => {
+  notification.value = text
+  setTimeout(() => {
+    notification.value = ''
+  }, duration)
+}
+
+// Get a music fn
 const findClosestMusic = (sceneId) => {
   const num = parseInt(sceneId.replace('scene-', ''))
   for (let i = num; i >= 0; i--) {
@@ -42,27 +57,13 @@ const findClosestMusic = (sceneId) => {
   return null
 }
 
-const saveID = sessionStorage.getItem('save')
-if (saveID) storyManager.jumpTo(saveID)
-
-// 读取持久化的 hasJade 和 hasKey，刷新也能保持状态
-const persistedHasJade = sessionStorage.getItem('hasJade')
-const persistedHasKey = sessionStorage.getItem('hasKey')
-if (persistedHasJade === 'true') hasJade.value = true
-if (persistedHasKey === 'true') hasKey.value = true
-
-const dialogueBoxProps = reactive({ speakerName: 'Player', text: 'Test' })
-const choicesButtonsProps = reactive({ choices: [] })
-
-let videoElement = null
-let bgMusic = null
-let cheatButton = null
-
+// Update the Cheat Button UI
 function updateCheatButton() {
   cheatButton.textContent = `😈 Cheat (${cheatCount})`
   cheatButton.disabled = cheatCount <= 0
 }
 
+// May unlock the cheat button
 function maybeUnlockCheat() {
   const currentScene = storyManager.getCurrentEvent
   if (currentScene.id === 'scene-7') {
@@ -71,6 +72,7 @@ function maybeUnlockCheat() {
   }
 }
 
+// Main function
 function updateScene() {
   const currentScene = storyManager.getCurrentEvent
   if (videoElement) {
@@ -151,7 +153,7 @@ onMounted(() => {
   videoElement = document.getElementById('video-container')
   bgMusic = document.getElementById('bg-music')
   cheatButton = document.getElementById('cheat-button')
-  if (videoElement) videoElement.addEventListener('click', onVideoClick)
+  videoElement.addEventListener('click', onVideoClick)
 
   cheatButton.addEventListener('click', () => {
     if (cheatCount <= 0) return
@@ -176,6 +178,7 @@ onBeforeUnmount(() => {
 })
 
 async function handleSaveClick() {
+  // ToDo: Include Jade and Key
   const userData = JSON.parse(sessionStorage.getItem('authToken') || '[]')[0]
   try {
     const res = await fetch(`http://localhost:3000/users/${userData.id}`, {
@@ -197,7 +200,6 @@ async function handleSaveClick() {
     showNotification('Error saving game')
   }
 }
-
 </script>
 
 <style scoped>
@@ -216,11 +218,11 @@ async function handleSaveClick() {
   <div>
     <audio id="bg-music" loop></audio>
     <div class="flex flex-col mx-auto h-full">
-
-
-       <transition name="fade">
-        <div v-if="notification"
-          class="fixed top-6 left-1/2 -translate-x-1/2 bg-rose-600 text-white font-semibold px-6 py-3 rounded shadow-lg z-50">
+      <transition name="fade">
+        <div
+          v-if="notification"
+          class="fixed top-6 left-1/2 -translate-x-1/2 bg-rose-600 text-white font-semibold px-6 py-3 rounded shadow-lg z-50"
+        >
           {{ notification }}
         </div>
       </transition>
@@ -233,10 +235,11 @@ async function handleSaveClick() {
       <main class="flex-1 flex flex-col p-5 overflow-hidden">
         <video
           id="video-container"
-          class="w-full max-h-[50vh] rounded-md cursor-pointer"
+          class="flex-1 bg-black cursor-pointer"
           playsinline
           preload="auto"
         ></video>
+        <!-- Helper buttons -->
         <div class="flex flex-row gap-4 mt-4">
           <button
             id="menu-button"
