@@ -3,6 +3,9 @@
 ## Simple Instructions
 
 Make sure you installed the Node.JS
+For details: visit this website and follow the instructions
+https://nodejs.org/en/download
+
 
 In the web-project folder:
 ```bash
