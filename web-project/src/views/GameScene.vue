@@ -205,10 +205,10 @@ async function handleSaveClick() {
           Text Adventure
         </h1>
       </header>
-      <main class="flex-1 flex flex-col p-5 overflow-hidden">
+      <main class="flex-1 flex flex-col p-5 overflow-hidden items-center">
         <video
           id="video-container"
-          class="w-full max-h-[50vh] rounded-md flex-1 bg-black cursor-pointer"
+          class="w-fit p-4 max-h-[50vh] rounded-md flex-1 bg-black cursor-pointer"
           playsinline
           preload="auto"
         ></video>
