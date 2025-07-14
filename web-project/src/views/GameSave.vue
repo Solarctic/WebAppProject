@@ -1,7 +1,7 @@
 <script setup>
 import { ref, computed } from 'vue'
 import router from '@/router'
-import { userData, saveData, saveState, loadState } from '@/composables/save-manager'
+import { userData, saveData, saveState, resetSaveData } from '@/composables/save-manager'
 const statusMessage = ref('')
 
 const hasSave = computed(() => saveData.sceneID != null)
@@ -29,22 +29,6 @@ async function saveGame() {
   }
 }
 
-function loadGame() {
-  if (!userData) {
-    statusMessage.value = 'Not logged in.'
-    showNotification(statusMessage.value)
-    return
-  }
-
-  try {
-    return loadState()
-  } catch (err) {
-    console.error(err)
-    statusMessage.value = 'Error loading game.'
-    showNotification(statusMessage.value)
-  }
-}
-
 const message = ref('')
 const showNotification = (text, duration = 2000) => {
   message.value = text
@@ -54,14 +38,18 @@ const showNotification = (text, duration = 2000) => {
 }
 
 function handleNewGameClick() {
-  saveData.sceneID = 'scene-0'
-  saveData.hasJade = false
-  saveData.hasKey = false
+  resetSaveData()
   saveGame().then(() => router.push('/game'))
 }
 
 function handleLoadGameClick() {
-  if (loadGame()) {
+  if (!userData) {
+    statusMessage.value = 'Not logged in.'
+    showNotification(statusMessage.value)
+    return
+  }
+
+  if (hasSave.value) {
     if (saveData.sceneID !== '') {
       setTimeout(() => {
         router.push('/game')

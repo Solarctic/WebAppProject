@@ -5,9 +5,10 @@
       "name": "admin",
       "password": "admin123",
       "save": {
-        "sceneID": "scene-0",
+        "sceneID": null,
         "hasJade": false,
-        "hasKey": false
+        "hasKey": false,
+        "cheatCount": 0
       }
     },
     {

@@ -8,19 +8,18 @@ import router from '@/router'
 
 import { saveState, saveData } from '@/composables/save-manager'
 
+// Variables
+const notification = ref('')
+// DOM elements
+let videoElement = null
+let bgMusic = null
+let cheatButton = null
+// Props
+const dialogueBoxProps = reactive({ speakerName: 'Player', text: 'Test' })
+const choicesButtonsProps = reactive({ choices: [] })
+
 const storyManager = new StoryManager(story)
 if (saveData.sceneID) storyManager.jumpTo(saveData.sceneID)
-
-let cheatCount = 0
-// 改成响应式变量
-// const hasJade = ref(saveData.hasJade)
-// const hasKey = ref(saveData.hasKey)
-const notification = ref('')
-// 读取持久化的 hasJade 和 hasKey，刷新也能保持状态
-// const persistedHasJade = sessionStorage.getItem('hasJade')
-// const persistedHasKey = sessionStorage.getItem('hasKey')
-// if (persistedHasJade === 'true') hasJade.value = true
-// if (persistedHasKey === 'true') hasKey.value = true
 // Music
 const musicMap = {
   'scene-0': '/Prologue.mp3',
@@ -32,13 +31,6 @@ const musicMap = {
   'scene-77': '/zhansha.mp3',
   'scene-106': '/tellthetruth.mp3',
 }
-// DOM elements
-let videoElement = null
-let bgMusic = null
-let cheatButton = null
-// Props
-const dialogueBoxProps = reactive({ speakerName: 'Player', text: 'Test' })
-const choicesButtonsProps = reactive({ choices: [] })
 
 // Notification fn
 const showNotification = (text, duration = 2000) => {
@@ -58,18 +50,11 @@ const findClosestMusic = (sceneId) => {
   return null
 }
 
-// Update the Cheat Button UI
-function updateCheatButton() {
-  cheatButton.textContent = `😈 Cheat (${cheatCount})`
-  cheatButton.disabled = cheatCount <= 0
-}
-
 // May unlock the cheat button
 function maybeUnlockCheat() {
   const currentScene = storyManager.getCurrentEvent
   if (currentScene.id === 'scene-7') {
-    cheatCount++
-    updateCheatButton()
+    saveData.cheatCount++
   }
 }
 
@@ -102,10 +87,6 @@ function updateScene() {
   if (!saveData.hasJade && currentScene.id === 'scene-34') {
     saveData.hasJade = true
     saveData.hasKey = true
-    // saveStateLocal()
-    // 保存状态到 sessionStorage
-    // sessionStorage.setItem('hasJade', 'true')
-    // sessionStorage.setItem('hasKey', 'true')
   }
 
   dialogueBoxProps.speakerName = currentScene.speaker
@@ -125,7 +106,7 @@ function handleChoice(index) {
   setTimeout(() => {
     const event = storyManager.makeChoice(index)
     if (event) updateScene()
-  }, 3500)
+  }, 3000)
 }
 
 function onVideoClick() {
@@ -158,9 +139,8 @@ onMounted(() => {
   videoElement.addEventListener('click', onVideoClick)
 
   cheatButton.addEventListener('click', () => {
-    if (cheatCount <= 0) return
-    cheatCount--
-    updateCheatButton()
+    if (saveData.cheatCount <= 0) return
+    saveData.cheatCount--
     setTimeout(() => {
       const currentScene = storyManager.getCurrentEvent
       if (currentScene.id === 'scene-6') {
@@ -251,9 +231,9 @@ async function handleSaveClick() {
           <button
             id="cheat-button"
             class="bg-yellow-400 hover:bg-yellow-500 px-4 py-2 rounded text-black font-bold ml-auto"
-            disabled
+            :disabled="saveData.cheatCount <= 0"
           >
-            😈 Cheat (0)
+            {{ `😈 Cheat (${saveData.cheatCount})` }}
           </button>
         </div>
 

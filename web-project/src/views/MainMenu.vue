@@ -2,7 +2,8 @@
 import router from '@/router'
 
 const logout = () => {
-  sessionStorage.clear() // or use clear() if needed
+  sessionStorage.clear()
+  // Back to Login Screen
   router.push('/')
 }
 </script>

@@ -27,7 +27,7 @@ export default createRouter({
       beforeEnter: [
         authGuard,
         (to, from) => {
-          if (from.path === '/menu' || from.path === '/save') {
+          if (from.path === '/save') {
             return true
           }
 
