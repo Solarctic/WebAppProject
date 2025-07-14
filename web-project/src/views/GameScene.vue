@@ -208,7 +208,7 @@ async function handleSaveClick() {
       <main class="flex-1 flex flex-col p-5 overflow-hidden">
         <video
           id="video-container"
-          class="w-full max-h-[50vh] rounded-md cursor-pointer"
+          class="w-full max-h-[50vh] rounded-md flex-1 bg-black cursor-pointer"
           playsinline
           preload="auto"
         ></video>
