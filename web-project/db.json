@@ -4,7 +4,11 @@
       "id": "1",
       "name": "admin",
       "password": "admin123",
-      "save": "scene-76"
+      "save": {
+        "sceneID": "scene-0",
+        "hasJade": false,
+        "hasKey": false
+      }
     },
     {
       "id": "2",
@@ -34,7 +38,7 @@
       "id": "8e23",
       "name": "admin1234",
       "password": "5",
-      "save": "scene-16"
+      "save": ""
     },
     {
       "id": "0a79",
@@ -58,7 +62,7 @@
       "id": "6927",
       "name": "admin5",
       "password": "12345",
-      "save": "scene-12"
+      "save": ""
     }
   ]
 }

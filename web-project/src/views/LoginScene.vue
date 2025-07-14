@@ -2,6 +2,8 @@
 import router from '@/router'
 import { ref } from 'vue'
 
+import { setUserData, userData } from '@/composables/save-manager'
+
 // For signup/login form
 const username = ref('')
 const password = ref('')
@@ -33,9 +35,8 @@ const handleLogin = async () => {
     const data = await res.json()
 
     if (data.length > 0) {
-      sessionStorage.setItem('authToken', JSON.stringify(data))
-      sessionStorage.setItem('save', data[0].save)
-      showNotification(`Welcome, ${data[0].name}!`)
+      setUserData(data[0])
+      showNotification(`Welcome, ${userData.name}!`)
       setTimeout(() => {
         router.push('/game')
       }, 1500)
@@ -48,8 +49,6 @@ const handleLogin = async () => {
   }
 }
 
-// ToDo: Include the data to the session (ideally use token rather than entire info)
-// sessionStorage.setItem("authToken", JSON.stringify(data));
 const handleSignup = async () => {
   if (!username.value || !password.value) {
     showNotification('Please enter both username and password')
@@ -83,7 +82,7 @@ const handleSignup = async () => {
     console.log('Created user:', newUser)
 
     //Store user in session (note: use a real token system in production)
-    sessionStorage.setItem('authToken', JSON.stringify([newUser]))
+    sessionStorage.setItem('authToken', JSON.stringify(newUser))
 
     showNotification(`Welcome, ${newUser.name}!`)
     setTimeout(() => {

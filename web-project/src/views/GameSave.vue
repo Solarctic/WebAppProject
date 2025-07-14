@@ -1,15 +1,12 @@
 <script setup>
 import { ref, computed } from 'vue'
 import router from '@/router'
-
+import { userData, saveData, saveState, loadState } from '@/composables/save-manager'
 const statusMessage = ref('')
 
-// Get current logged-in user from session
-const userData = JSON.parse(sessionStorage.getItem('authToken') || '[]')[0]
+const hasSave = computed(() => saveData.sceneID != null)
 
-const hasSave = computed(() => !!sessionStorage.getItem('save'))
-
-async function saveGame(sceneID) {
+async function saveGame() {
   if (!userData) {
     statusMessage.value = 'Not logged in.'
     showNotification(statusMessage.value)
@@ -17,17 +14,8 @@ async function saveGame(sceneID) {
   }
 
   try {
-    const res = await fetch(`http://localhost:3000/users/${userData.id}`, {
-      method: 'PATCH',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ save: sceneID }),
-    })
-
-    sessionStorage.setItem('save', sceneID)
-
-    if (res.ok) {
+    const result = await saveState()
+    if (result.ok) {
       statusMessage.value = 'Game saved!'
       showNotification(statusMessage.value)
     } else {
@@ -41,7 +29,7 @@ async function saveGame(sceneID) {
   }
 }
 
-async function loadGame() {
+function loadGame() {
   if (!userData) {
     statusMessage.value = 'Not logged in.'
     showNotification(statusMessage.value)
@@ -49,16 +37,7 @@ async function loadGame() {
   }
 
   try {
-    const res = await fetch(`http://localhost:3000/users/${userData.id}`)
-    const data = await res.json()
-
-    statusMessage.value = `Loaded game: ${data.save || 'No save found.'}`
-    showNotification(statusMessage.value)
-
-    sessionStorage.setItem('save', data.save)
-
-    // You could emit or return this data to load it in your game engine
-    return data.save
+    return loadState()
   } catch (err) {
     console.error(err)
     statusMessage.value = 'Error loading game.'
@@ -75,19 +54,21 @@ const showNotification = (text, duration = 2000) => {
 }
 
 function handleNewGameClick() {
-  saveGame('scene-0').then(() => router.push('/game'))
+  saveData.sceneID = 'scene-0'
+  saveData.hasJade = false
+  saveData.hasKey = false
+  saveGame().then(() => router.push('/game'))
 }
 
 function handleLoadGameClick() {
-  loadGame().then((save) => {
-    if (save !== '') {
+  if (loadGame()) {
+    if (saveData.sceneID !== '') {
       setTimeout(() => {
         router.push('/game')
       }, 1500)
     }
-  })
+  }
 }
-
 </script>
 
 <style scoped>

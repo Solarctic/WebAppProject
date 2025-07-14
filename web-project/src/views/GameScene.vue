@@ -6,20 +6,21 @@ import { story } from '@/stores/story-data'
 import { StoryManager } from '@/composables/story-manager'
 import router from '@/router'
 
+import { saveState, saveData } from '@/composables/save-manager'
+
 const storyManager = new StoryManager(story)
-const saveID = sessionStorage.getItem('save')
-if (saveID) storyManager.jumpTo(saveID)
+if (saveData.sceneID) storyManager.jumpTo(saveData.sceneID)
 
 let cheatCount = 0
 // 改成响应式变量
-const hasJade = ref(false)
-const hasKey = ref(false)
+// const hasJade = ref(saveData.hasJade)
+// const hasKey = ref(saveData.hasKey)
 const notification = ref('')
 // 读取持久化的 hasJade 和 hasKey，刷新也能保持状态
-const persistedHasJade = sessionStorage.getItem('hasJade')
-const persistedHasKey = sessionStorage.getItem('hasKey')
-if (persistedHasJade === 'true') hasJade.value = true
-if (persistedHasKey === 'true') hasKey.value = true
+// const persistedHasJade = sessionStorage.getItem('hasJade')
+// const persistedHasKey = sessionStorage.getItem('hasKey')
+// if (persistedHasJade === 'true') hasJade.value = true
+// if (persistedHasKey === 'true') hasKey.value = true
 // Music
 const musicMap = {
   'scene-0': '/Prologue.mp3',
@@ -98,12 +99,13 @@ function updateScene() {
   }
 
   // 经过 scene-34 后永久显示文本
-  if (!hasJade.value && currentScene.id === 'scene-34') {
-    hasJade.value = true
-    hasKey.value = true
+  if (!saveData.hasJade && currentScene.id === 'scene-34') {
+    saveData.hasJade = true
+    saveData.hasKey = true
+    // saveStateLocal()
     // 保存状态到 sessionStorage
-    sessionStorage.setItem('hasJade', 'true')
-    sessionStorage.setItem('hasKey', 'true')
+    // sessionStorage.setItem('hasJade', 'true')
+    // sessionStorage.setItem('hasKey', 'true')
   }
 
   dialogueBoxProps.speakerName = currentScene.speaker
@@ -178,19 +180,10 @@ onBeforeUnmount(() => {
 })
 
 async function handleSaveClick() {
-  // ToDo: Include Jade and Key
-  const userData = JSON.parse(sessionStorage.getItem('authToken') || '[]')[0]
   try {
-    const res = await fetch(`http://localhost:3000/users/${userData.id}`, {
-      method: 'PATCH',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ save: storyManager.currentId }),
-    })
+    saveData.sceneID = storyManager.currentId
 
-    if (res.ok) {
-      sessionStorage.setItem('save', storyManager.currentId)
+    if (await saveState()) {
       showNotification('Game has been saved')
     } else {
       showNotification('Failed to save game')
@@ -265,7 +258,7 @@ async function handleSaveClick() {
         </div>
 
         <!-- 常驻文本区，只有触发过 scene-34 后显示 -->
-        <div v-if="hasJade && hasKey" class="mt-2 flex gap-4 select-none">
+        <div v-if="saveData.hasJade && saveData.hasKey" class="mt-2 flex gap-4 select-none">
           <span
             class="px-3 py-1 rounded font-bold text-white bg-green-600"
             style="user-select: none"
