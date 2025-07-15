@@ -17,8 +17,9 @@ let cheatButton = null
 // Props
 const dialogueBoxProps = reactive({ speakerName: 'Player', text: 'Test' })
 const choicesButtonsProps = reactive({ choices: [] })
-
+// Story Manager (for controlling events)
 const storyManager = new StoryManager(story)
+// If saveData exists then load the scene
 if (saveData.sceneID) storyManager.jumpTo(saveData.sceneID)
 // Music
 const musicMap = {
@@ -61,17 +62,21 @@ function maybeUnlockCheat() {
 // Main function
 function updateScene() {
   const currentScene = storyManager.getCurrentEvent
+  // Load the video
   if (videoElement) {
     videoElement.src = currentScene.video
     videoElement.currentTime = 0
     videoElement.play()
   }
 
+  // Check if you may get cheat button
   maybeUnlockCheat()
 
+  // Load Music
   const music = findClosestMusic(currentScene.id)
   const absPath = music ? location.origin + music : null
 
+  // Play Music
   if (music === null) {
     bgMusic.pause()
     bgMusic.removeAttribute('src')
@@ -89,26 +94,34 @@ function updateScene() {
     saveData.hasKey = true
   }
 
+  // Set the props
   dialogueBoxProps.speakerName = currentScene.speaker
   dialogueBoxProps.text = currentScene.text
   choicesButtonsProps.choices = currentScene.choices
 }
 
+// Each button has their own binding choice
 function handleChoice(index) {
+  // Get the current event
   const currentScene = storyManager.getCurrentEvent
   if (index >= currentScene.choices.length) return
+
+  // Clear choices and set the dialogue props
   choicesButtonsProps.choices = []
   dialogueBoxProps.speakerName = 'Player'
   dialogueBoxProps.text =
     currentScene.responses && currentScene.responses[index] !== undefined
       ? currentScene.responses[index]
       : ''
+
+  // Move to next scene once 3 secs ends
   setTimeout(() => {
     const event = storyManager.makeChoice(index)
     if (event) updateScene()
   }, 3000)
 }
 
+// Allows you to advance the video
 function onVideoClick() {
   if (!videoElement) return
   const currentScene = storyManager.getCurrentEvent
@@ -132,12 +145,15 @@ function onVideoClick() {
   }
 }
 
+// Startup
 onMounted(() => {
+  // Get the DOM elements
   videoElement = document.getElementById('video-container')
   bgMusic = document.getElementById('bg-music')
   cheatButton = document.getElementById('cheat-button')
   videoElement.addEventListener('click', onVideoClick)
 
+  // Add the event listener for the cheat button
   cheatButton.addEventListener('click', () => {
     if (saveData.cheatCount <= 0) return
     saveData.cheatCount--
@@ -155,10 +171,12 @@ onMounted(() => {
   updateScene()
 })
 
+// Unload the page
 onBeforeUnmount(() => {
   if (videoElement) videoElement.removeEventListener('click', onVideoClick)
 })
 
+// Save the game
 async function handleSaveClick() {
   try {
     saveData.sceneID = storyManager.currentId
@@ -191,6 +209,7 @@ async function handleSaveClick() {
   <div>
     <audio id="bg-music" loop></audio>
     <div class="flex flex-col mx-auto h-full">
+      <!-- Notification -->
       <transition name="fade">
         <div
           v-if="notification"
@@ -199,12 +218,13 @@ async function handleSaveClick() {
           {{ notification }}
         </div>
       </transition>
-
+      <!-- Title -->
       <header class="p-3.5 text-center border-b-4 border-b-rose-500">
         <h1 class="m-0 text-4xl text-white text-shadow-[3px_3px_0] text-shadow-rose-500">
           Text Adventure
         </h1>
       </header>
+      <!-- Main Layout -->
       <main class="flex-1 flex flex-col p-5 overflow-hidden items-center">
         <video
           id="video-container"
@@ -213,7 +233,7 @@ async function handleSaveClick() {
           preload="auto"
         ></video>
         <!-- Helper buttons -->
-        <div class="flex flex-row gap-4 mt-4">
+        <div class="flex flex-row gap-4 mt-4 w-full">
           <button
             id="menu-button"
             class="bg-gray-400 hover:bg-gray-500 px-4 py-2 rounded text-black font-bold"
@@ -251,7 +271,9 @@ async function handleSaveClick() {
           >
         </div>
 
+        <!-- Dialogue Box -->
         <DialogueBox v-bind="dialogueBoxProps" />
+        <!-- ChoicesBox -->
         <ChoicesBox class="mt-4" v-bind="choicesButtonsProps" @choiceSelected="handleChoice" />
       </main>
     </div>
